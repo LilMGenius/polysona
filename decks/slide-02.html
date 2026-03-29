@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Problem</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #07111c;
+      --surface: rgba(15, 27, 44, 0.72);
+      --surface-2: rgba(14, 33, 53, 0.58);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --border: rgba(155, 231, 255, 0.16);
+      --danger: #ff8e70;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(67,199,255,0.16), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(99,102,241,0.16), transparent 24%),
+        linear-gradient(180deg, #08121f 0%, #06101a 100%);
+      color: var(--text);
+      padding: 24pt 28pt 18pt;
+    }
+    header, footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header { margin-bottom: 18pt; }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 26pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 18pt;
+      height: 276pt;
+    }
+    .statement {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20pt;
+      border-radius: 24pt;
+      background: linear-gradient(180deg, rgba(14,28,47,0.88), rgba(10,21,35,0.92));
+      border: 1px solid var(--border);
+    }
+    .statement h2 {
+      font-size: 34pt;
+      line-height: 1.14;
+      letter-spacing: -0.055em;
+      margin-bottom: 12pt;
+      max-width: 310pt;
+      padding-bottom: 3pt;
+    }
+    .statement h2 strong { color: var(--accent); }
+    .statement p {
+      font-size: 12.5pt;
+      line-height: 1.6;
+      color: #d9eaff;
+      max-width: 320pt;
+    }
+    .pain-bars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10pt;
+    }
+    .pain-bars li {
+      list-style: none;
+      border-top: 3pt solid var(--danger);
+      padding-top: 8pt;
+      font-size: 9.5pt;
+      color: var(--muted);
+    }
+    .pain-bars strong {
+      display: block;
+      color: var(--text);
+      font-size: 13pt;
+      margin-bottom: 4pt;
+    }
+    .details {
+      display: grid;
+      gap: 10pt;
+    }
+    .detail {
+      border-radius: 20pt;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14pt 16pt;
+    }
+    .detail p:first-child {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 7pt;
+    }
+    .detail p:last-child {
+      font-size: 12pt;
+      line-height: 1.48;
+      color: var(--text);
+    }
+    .quote {
+      background: var(--surface-2);
+      border-radius: 18pt;
+      padding: 14pt 16pt;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .quote p {
+      font-size: 11.5pt;
+      line-height: 1.6;
+      color: #d3e5fb;
+    }
+    footer {
+      margin-top: 8pt;
+      padding-top: 8pt;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    footer p {
+      font-size: 8.5pt;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Problem</p>
+      <h1>에이전트는 일을 하지만, "나"를 모른다</h1>
+    </div>
+    <p class="page">02</p>
+  </header>
+
+  <main>
+    <section class="statement">
+      <div>
+        <h2>generic AI는<br><strong>목소리</strong>를 잃게 만든다</h2>
+        <p>기존 agent stack은 문맥은 처리해도 화자의 심리, 말투, 가면, 관계 맥락까지는 재현하지 못합니다.</p>
+      </div>
+      <ul class="pain-bars">
+        <li><strong>문서 있음</strong>md로 정리해도 실제 실행에서 무시됨</li>
+        <li><strong>운영 빈도</strong>콘텐츠, 댓글, 답글, 의사결정 전 과정에서 반복</li>
+        <li><strong>결과</strong>내 페르소나가 납작해지고 계정 품질이 무너짐</li>
+      </ul>
+    </section>
+
+    <section class="details">
+      <article class="detail">
+        <p>Target</p>
+        <p>여러 플랫폼에서 AI 인플루언서 계정을 동시에 운영하려는 개인과 에이전시</p>
+      </article>
+      <article class="detail">
+        <p>Broken State</p>
+        <p>OpenClaw, oh-my-* 계열, 일반 agent stack은 결국 "나"가 아니라 generic assistant에 가까움</p>
+      </article>
+      <article class="quote">
+        <p>"잘 정리된 문서가 있어도 에이전트는 나를 평평하게 소비한다."</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>핵심 문제: 맥락 자동화는 있는데 자기 투영 자동화는 없다.</p>
+  </footer>
+</body>
+</html>

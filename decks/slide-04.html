@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Solution</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #07111d;
+      --surface: rgba(11, 24, 39, 0.8);
+      --surface-2: rgba(19, 38, 59, 0.7);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --accent-soft: #9be7ff;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(67,199,255,0.16), transparent 24%),
+        linear-gradient(180deg, #08121f 0%, #05101a 100%);
+      color: var(--text);
+      padding: 24pt 26pt 20pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 24pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      max-width: 550pt;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    .definition {
+      margin-bottom: 12pt;
+      font-size: 11.5pt;
+      color: var(--accent-soft);
+      line-height: 1.45;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8pt;
+      margin-bottom: 14pt;
+      position: relative;
+    }
+    .step {
+      border-radius: 20pt;
+      background: linear-gradient(180deg, rgba(14,27,44,0.86), rgba(10,22,36,0.96));
+      border: 1px solid var(--border);
+      padding: 14pt 12pt;
+      min-height: 164pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .step p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8pt;
+    }
+    .step h2 {
+      font-size: 16pt;
+      line-height: 1.14;
+      letter-spacing: -0.035em;
+      margin-bottom: 10pt;
+    }
+    .step ul {
+      display: grid;
+      gap: 6pt;
+    }
+    .step li {
+      list-style: none;
+      font-size: 10pt;
+      line-height: 1.45;
+      color: #d8eafb;
+      position: relative;
+      padding-left: 9pt;
+    }
+    .step li::before {
+      content: "";
+      width: 4pt;
+      height: 4pt;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 6pt;
+    }
+    .footer-band {
+      border-radius: 18pt;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 12pt 14pt;
+      display: flex;
+      justify-content: space-between;
+      gap: 16pt;
+      align-items: center;
+    }
+    .footer-band p {
+      font-size: 10.5pt;
+      line-height: 1.5;
+      color: #d7e8fb;
+    }
+    .footer-band strong { color: var(--accent-soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Solution</p>
+      <h1>심리학적 Agent Harness 기반 멀티 페르소나 운영 시스템</h1>
+    </div>
+    <p class="page">04</p>
+  </header>
+
+  <p class="definition">Polysona는 인터뷰와 메타인지를 통해 사용자를 구조화하고, 그 사람에 맞는 멀티 페르소나 콘텐츠 운영 루프를 만듭니다.</p>
+
+  <main class="flow">
+    <article class="step">
+      <div>
+        <p>01 Interview</p>
+        <h2>나를 묻는다</h2>
+      </div>
+      <ul>
+        <li>10-framework 기반 인터뷰</li>
+        <li>심리학적 / 철학적 단서 수집</li>
+        <li>표면 니즈와 내면 패턴 분리</li>
+      </ul>
+    </article>
+    <article class="step">
+      <div>
+        <p>02 Structuring</p>
+        <h2>나를 구조화한다</h2>
+      </div>
+      <ul>
+        <li>persona.md / nuance.md / accounts.md 생성</li>
+        <li>상황별 여러 가면을 분리 관리</li>
+        <li>generic prompt 대신 persona harness 적용</li>
+      </ul>
+    </article>
+    <article class="step">
+      <div>
+        <p>03 Generation</p>
+        <h2>가장 "나"다운 콘텐츠를 만든다</h2>
+      </div>
+      <ul>
+        <li>플랫폼별 초안 자동 생성</li>
+        <li>말투, 관점, 역할별 페르소나 반영</li>
+        <li>어떤 AI agent 위에서도 동작</li>
+      </ul>
+    </article>
+    <article class="step">
+      <div>
+        <p>04 QA Loop</p>
+        <h2>virtual follower로 검증한다</h2>
+      </div>
+      <ul>
+        <li>버추얼 팔로워가 반응 시뮬레이션</li>
+        <li>드래프트 QA 후 상위안 추천</li>
+        <li>출판과 피드백 루프까지 연결</li>
+      </ul>
+    </article>
+  </main>
+
+  <section class="footer-band">
+    <p><strong>MVP demo:</strong> 인터뷰 -> 메타인지 기반 페르소나화 -> 콘텐츠 생성 -> QA</p>
+    <p><strong>Promise:</strong> "AI를 붙이는 것"이 아니라 "나를 운영 가능한 시스템으로 만드는 것"</p>
+  </section>
+</body>
+</html>

@@ -5,7 +5,7 @@
 <h3 align="center">Build and run multiple personas across any AI agent.</h3>
 
 <p align="center">
-  <img alt="version" src="https://img.shields.io/badge/version-1.2.1-blue">
+  <img alt="version" src="https://img.shields.io/badge/version-1.3.0-blue">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="stars" src="https://img.shields.io/github/stars/LilMGenius/polysona?style=social">
 </p>

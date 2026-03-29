@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Cover</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #06101b;
+      --surface: rgba(10, 21, 36, 0.82);
+      --border: rgba(155, 231, 255, 0.18);
+      --text: #eef7ff;
+      --muted: #93abc5;
+      --accent: #43c7ff;
+      --accent-soft: #9be7ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        linear-gradient(180deg, rgba(6,16,27,0.1) 0%, rgba(6,16,27,0.5) 45%, rgba(6,16,27,0.92) 100%),
+        linear-gradient(90deg, rgba(6,16,27,0.85) 0%, rgba(6,16,27,0.35) 42%, rgba(6,16,27,0.82) 100%),
+        url('./assets/banner.svg') center / cover no-repeat,
+        var(--bg);
+      color: var(--text);
+      position: relative;
+    }
+    main {
+      position: relative;
+      height: 100%;
+      padding: 30pt 34pt 28pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    header, footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pill-row, .meta-row {
+      display: flex;
+      gap: 8pt;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(7, 18, 30, 0.4);
+      border-radius: 999pt;
+      padding: 6pt 10pt;
+      font-size: 8.5pt;
+      letter-spacing: 0.08em;
+      color: var(--accent-soft);
+      text-transform: uppercase;
+    }
+    .brand {
+      font-size: 11pt;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 18pt;
+      align-items: end;
+      min-height: 220pt;
+    }
+    h1 {
+      font-size: 52pt;
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      margin-bottom: 10pt;
+      padding-bottom: 4pt;
+    }
+    .subtitle {
+      font-size: 19pt;
+      color: var(--accent-soft);
+      margin-bottom: 12pt;
+      font-weight: 600;
+    }
+    .oneliner {
+      max-width: 360pt;
+      font-size: 13pt;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .meaning {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      border-left: 1px solid var(--border);
+      padding-left: 18pt;
+      padding-bottom: 6pt;
+    }
+    .meaning p:first-child {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 8pt;
+    }
+    .meaning p:last-child {
+      font-size: 23pt;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+    }
+    .meaning strong {
+      color: var(--accent);
+    }
+    footer {
+      padding-top: 14pt;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      gap: 18pt;
+    }
+    .meta-block p:first-child {
+      font-size: 8.5pt;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4pt;
+    }
+    .meta-block p:last-child {
+      font-size: 10.5pt;
+      color: var(--text);
+    }
+    .meta-block code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 10pt;
+      color: var(--accent-soft);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="pill-row">
+        <p class="brand">POLYSONA</p>
+        <p class="pill">Ralphthon Seoul</p>
+        <p class="pill">Mid Presentation</p>
+      </div>
+      <p class="pill">Agent-Native Persona System</p>
+    </header>
+
+    <section class="hero">
+      <div>
+        <p class="subtitle">Polygon + Persona</p>
+        <h1>Polysona</h1>
+        <p class="oneliner">Build and run multiple personas across any AI agent.</p>
+      </div>
+      <div class="meaning">
+        <p>Name Thesis</p>
+        <p><strong>Polygon</strong>처럼 다면적인 자아를<br><strong>Persona</strong> 단위로 구조화하고 운영합니다.</p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="meta-row">
+        <div class="meta-block">
+          <p>Team</p>
+          <p>Polysona</p>
+        </div>
+        <div class="meta-block">
+          <p>Founder</p>
+          <p>이선민 (@LilMGenius), CEO/CAIO @ defytheodd</p>
+        </div>
+      </div>
+      <div class="meta-block">
+        <p>GitHub</p>
+        <p><code>github.com/LilMGenius/polysona</code></p>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

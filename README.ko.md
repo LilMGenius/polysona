@@ -5,7 +5,7 @@
 <h3 align="center">모든 AI 에이전트 위에서 다중 페르소나를 구축하고 운영하세요.</h3>
 
 <p align="center">
-  <img alt="version" src="https://img.shields.io/badge/version-1.2.1-blue">
+  <img alt="version" src="https://img.shields.io/badge/version-1.3.0-blue">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="stars" src="https://img.shields.io/github/stars/LilMGenius/polysona?style=social">
 </p>

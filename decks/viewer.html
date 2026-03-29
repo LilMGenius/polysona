@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Viewer</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #111;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    .viewer-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Navigation bar */
+    .nav-bar {
+      height: 48px;
+      background: #1a1a1a;
+      border-bottom: 1px solid #333;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-shrink: 0;
+      z-index: 100;
+    }
+
+    .nav-bar button {
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 16px;
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .nav-bar button:hover {
+      background: #555;
+    }
+
+    .nav-bar button:disabled {
+      opacity: 0.3;
+      cursor: default;
+    }
+
+    .slide-counter {
+      color: #aaa;
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 60px;
+      text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .btn-fullscreen {
+      position: absolute;
+      right: 16px;
+      background: transparent !important;
+      font-size: 18px;
+      padding: 6px 10px !important;
+    }
+
+    /* Slide viewport */
+    .slide-viewport {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slide-scaler {
+      width: 720pt;
+      height: 405pt;
+      position: relative;
+      transform-origin: center center;
+    }
+
+    /* Slide frames (iframes) */
+    .slide-frame {
+      position: absolute;
+      inset: 0;
+      width: 720pt;
+      height: 405pt;
+      border: none;
+      overflow: hidden;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .slide-frame.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewer-container">
+    <!-- Navigation -->
+    <div class="nav-bar">
+      <button id="btn-prev" title="Previous (\u2190)">Prev</button>
+      <span class="slide-counter" id="counter">1 / 5</span>
+      <button id="btn-next" title="Next (\u2192)">Next</button>
+      <button class="btn-fullscreen" id="btn-fs" title="Fullscreen (F)">&#x26F6;</button>
+    </div>
+
+    <!-- Slide viewport -->
+    <div class="slide-viewport" id="viewport">
+      <div class="slide-scaler" id="scaler">
+        <iframe class="slide-frame active" data-slide="1" srcdoc="<!DOCTYPE html>
+<html lang=&quot;ko&quot;>
+<head>
+<base href=&quot;./&quot;>
+<script>
+(() => {
+  const slideFile = &quot;slide-01.html&quot;;
+  const localAssetPrefix = &quot;./assets/&quot;;
+  const absolutePathRe = /^(file:\/\/|\/Users\/|\/home\/|\/var\/|\/tmp\/|\/private\/|\/Volumes\/|[A-Za-z]:[\\/]|\\\\)/i;
+  const prefix = '[slides-grab:image]';
+
+  function describeElement(element) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) return '';
+    if (element === document.body) return 'body';
+
+    const parts = [];
+    let current = element;
+    while (current &amp;&amp; current.nodeType === Node.ELEMENT_NODE &amp;&amp; current !== document.body) {
+      let part = current.tagName.toLowerCase();
+      if (current.id) {
+        part += '#' + current.id;
+        parts.unshift(part);
+        break;
+      }
+      if (current.classList.length > 0) {
+        part += '.' + Array.from(current.classList).slice(0, 2).join('.');
+      }
+      parts.unshift(part);
+      current = current.parentElement;
+    }
+    return 'body > ' + parts.join(' > ');
+  }
+
+  function warn(message, detail) {
+    console.warn(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  function fail(message, detail) {
+    console.error(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  window.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+    const src = (target.getAttribute('src') || target.currentSrc || '').trim();
+    if (!src || src.startsWith('data:')) return;
+    if (src.startsWith(localAssetPrefix)) {
+      fail('missing local asset', { src });
+      return;
+    }
+    fail('image failed to load', { src });
+  }, true);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    for (const image of document.querySelectorAll('img[src]')) {
+      const src = (image.getAttribute('src') || '').trim();
+      if (!src || src.startsWith('data:')) continue;
+      if (src.startsWith('https://')) {
+        fail('remote image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (src.startsWith('http://')) {
+        fail('remote http:// image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (absolutePathRe.test(src) || src.startsWith('/')) {
+        fail('non-portable image path is unsupported', { src });
+        continue;
+      }
+      if (!src.startsWith(localAssetPrefix)) {
+        warn('noncanonical local image path should use ./assets/<file>', { src });
+      }
+    }
+
+    for (const element of document.body.querySelectorAll('*')) {
+      if (element === document.body) continue;
+      const backgroundImage = window.getComputedStyle(element).backgroundImage;
+      if (!backgroundImage || backgroundImage === 'none' || !backgroundImage.includes('url(')) continue;
+      fail('non-body background-image is not supported for slide content', {
+        element: describeElement(element),
+        backgroundImage,
+      });
+    }
+  });
+})();
+</script>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+  <title>Polysona - Cover</title>
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+  <style>
+    :root {
+      --bg: #06101b;
+      --surface: rgba(10, 21, 36, 0.82);
+      --border: rgba(155, 231, 255, 0.18);
+      --text: #eef7ff;
+      --muted: #93abc5;
+      --accent: #43c7ff;
+      --accent-soft: #9be7ff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        linear-gradient(180deg, rgba(6,16,27,0.1) 0%, rgba(6,16,27,0.5) 45%, rgba(6,16,27,0.92) 100%),
+        linear-gradient(90deg, rgba(6,16,27,0.85) 0%, rgba(6,16,27,0.35) 42%, rgba(6,16,27,0.82) 100%),
+        url('./assets/banner.svg') center / cover no-repeat,
+        var(--bg);
+      color: var(--text);
+      position: relative;
+    }
+    main {
+      position: relative;
+      height: 100%;
+      padding: 30pt 34pt 28pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    header, footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .pill-row, .meta-row {
+      display: flex;
+      gap: 8pt;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .pill {
+      border: 1px solid var(--border);
+      background: rgba(7, 18, 30, 0.4);
+      border-radius: 999pt;
+      padding: 6pt 10pt;
+      font-size: 8.5pt;
+      letter-spacing: 0.08em;
+      color: var(--accent-soft);
+      text-transform: uppercase;
+    }
+    .brand {
+      font-size: 11pt;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+    }
+    .hero {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 18pt;
+      align-items: end;
+      min-height: 220pt;
+    }
+    h1 {
+      font-size: 52pt;
+      line-height: 1.08;
+      letter-spacing: -0.05em;
+      margin-bottom: 10pt;
+      padding-bottom: 4pt;
+    }
+    .subtitle {
+      font-size: 19pt;
+      color: var(--accent-soft);
+      margin-bottom: 12pt;
+      font-weight: 600;
+    }
+    .oneliner {
+      max-width: 360pt;
+      font-size: 13pt;
+      line-height: 1.55;
+      color: var(--text);
+    }
+    .meaning {
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      border-left: 1px solid var(--border);
+      padding-left: 18pt;
+      padding-bottom: 6pt;
+    }
+    .meaning p:first-child {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-bottom: 8pt;
+    }
+    .meaning p:last-child {
+      font-size: 23pt;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+    }
+    .meaning strong {
+      color: var(--accent);
+    }
+    footer {
+      padding-top: 14pt;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      gap: 18pt;
+    }
+    .meta-block p:first-child {
+      font-size: 8.5pt;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 4pt;
+    }
+    .meta-block p:last-child {
+      font-size: 10.5pt;
+      color: var(--text);
+    }
+    .meta-block code {
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+      font-size: 10pt;
+      color: var(--accent-soft);
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class=&quot;pill-row&quot;>
+        <p class=&quot;brand&quot;>POLYSONA</p>
+        <p class=&quot;pill&quot;>Ralphthon Seoul</p>
+        <p class=&quot;pill&quot;>Mid Presentation</p>
+      </div>
+      <p class=&quot;pill&quot;>Agent-Native Persona System</p>
+    </header>
+
+    <section class=&quot;hero&quot;>
+      <div>
+        <p class=&quot;subtitle&quot;>Polygon + Persona</p>
+        <h1>Polysona</h1>
+        <p class=&quot;oneliner&quot;>Build and run multiple personas across any AI agent.</p>
+      </div>
+      <div class=&quot;meaning&quot;>
+        <p>Name Thesis</p>
+        <p><strong>Polygon</strong>처럼 다면적인 자아를<br><strong>Persona</strong> 단위로 구조화하고 운영합니다.</p>
+      </div>
+    </section>
+
+    <footer>
+      <div class=&quot;meta-row&quot;>
+        <div class=&quot;meta-block&quot;>
+          <p>Team</p>
+          <p>Polysona</p>
+        </div>
+        <div class=&quot;meta-block&quot;>
+          <p>Founder</p>
+          <p>이선민 (@LilMGenius), CEO/CAIO @ defytheodd</p>
+        </div>
+      </div>
+      <div class=&quot;meta-block&quot;>
+        <p>GitHub</p>
+        <p><code>github.com/LilMGenius/polysona</code></p>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>
+" sandbox="allow-same-origin"></iframe>
+        <iframe class="slide-frame" data-slide="2" srcdoc="<!DOCTYPE html>
+<html lang=&quot;ko&quot;>
+<head>
+<base href=&quot;./&quot;>
+<script>
+(() => {
+  const slideFile = &quot;slide-02.html&quot;;
+  const localAssetPrefix = &quot;./assets/&quot;;
+  const absolutePathRe = /^(file:\/\/|\/Users\/|\/home\/|\/var\/|\/tmp\/|\/private\/|\/Volumes\/|[A-Za-z]:[\\/]|\\\\)/i;
+  const prefix = '[slides-grab:image]';
+
+  function describeElement(element) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) return '';
+    if (element === document.body) return 'body';
+
+    const parts = [];
+    let current = element;
+    while (current &amp;&amp; current.nodeType === Node.ELEMENT_NODE &amp;&amp; current !== document.body) {
+      let part = current.tagName.toLowerCase();
+      if (current.id) {
+        part += '#' + current.id;
+        parts.unshift(part);
+        break;
+      }
+      if (current.classList.length > 0) {
+        part += '.' + Array.from(current.classList).slice(0, 2).join('.');
+      }
+      parts.unshift(part);
+      current = current.parentElement;
+    }
+    return 'body > ' + parts.join(' > ');
+  }
+
+  function warn(message, detail) {
+    console.warn(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  function fail(message, detail) {
+    console.error(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  window.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+    const src = (target.getAttribute('src') || target.currentSrc || '').trim();
+    if (!src || src.startsWith('data:')) return;
+    if (src.startsWith(localAssetPrefix)) {
+      fail('missing local asset', { src });
+      return;
+    }
+    fail('image failed to load', { src });
+  }, true);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    for (const image of document.querySelectorAll('img[src]')) {
+      const src = (image.getAttribute('src') || '').trim();
+      if (!src || src.startsWith('data:')) continue;
+      if (src.startsWith('https://')) {
+        fail('remote image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (src.startsWith('http://')) {
+        fail('remote http:// image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (absolutePathRe.test(src) || src.startsWith('/')) {
+        fail('non-portable image path is unsupported', { src });
+        continue;
+      }
+      if (!src.startsWith(localAssetPrefix)) {
+        warn('noncanonical local image path should use ./assets/<file>', { src });
+      }
+    }
+
+    for (const element of document.body.querySelectorAll('*')) {
+      if (element === document.body) continue;
+      const backgroundImage = window.getComputedStyle(element).backgroundImage;
+      if (!backgroundImage || backgroundImage === 'none' || !backgroundImage.includes('url(')) continue;
+      fail('non-body background-image is not supported for slide content', {
+        element: describeElement(element),
+        backgroundImage,
+      });
+    }
+  });
+})();
+</script>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+  <title>Polysona - Problem</title>
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+  <style>
+    :root {
+      --bg: #07111c;
+      --surface: rgba(15, 27, 44, 0.72);
+      --surface-2: rgba(14, 33, 53, 0.58);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --border: rgba(155, 231, 255, 0.16);
+      --danger: #ff8e70;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(67,199,255,0.16), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(99,102,241,0.16), transparent 24%),
+        linear-gradient(180deg, #08121f 0%, #06101a 100%);
+      color: var(--text);
+      padding: 24pt 28pt 18pt;
+    }
+    header, footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header { margin-bottom: 18pt; }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 26pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 18pt;
+      height: 276pt;
+    }
+    .statement {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20pt;
+      border-radius: 24pt;
+      background: linear-gradient(180deg, rgba(14,28,47,0.88), rgba(10,21,35,0.92));
+      border: 1px solid var(--border);
+    }
+    .statement h2 {
+      font-size: 34pt;
+      line-height: 1.14;
+      letter-spacing: -0.055em;
+      margin-bottom: 12pt;
+      max-width: 310pt;
+      padding-bottom: 3pt;
+    }
+    .statement h2 strong { color: var(--accent); }
+    .statement p {
+      font-size: 12.5pt;
+      line-height: 1.6;
+      color: #d9eaff;
+      max-width: 320pt;
+    }
+    .pain-bars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10pt;
+    }
+    .pain-bars li {
+      list-style: none;
+      border-top: 3pt solid var(--danger);
+      padding-top: 8pt;
+      font-size: 9.5pt;
+      color: var(--muted);
+    }
+    .pain-bars strong {
+      display: block;
+      color: var(--text);
+      font-size: 13pt;
+      margin-bottom: 4pt;
+    }
+    .details {
+      display: grid;
+      gap: 10pt;
+    }
+    .detail {
+      border-radius: 20pt;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14pt 16pt;
+    }
+    .detail p:first-child {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 7pt;
+    }
+    .detail p:last-child {
+      font-size: 12pt;
+      line-height: 1.48;
+      color: var(--text);
+    }
+    .quote {
+      background: var(--surface-2);
+      border-radius: 18pt;
+      padding: 14pt 16pt;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .quote p {
+      font-size: 11.5pt;
+      line-height: 1.6;
+      color: #d3e5fb;
+    }
+    footer {
+      margin-top: 8pt;
+      padding-top: 8pt;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    footer p {
+      font-size: 8.5pt;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class=&quot;eyebrow&quot;>Problem</p>
+      <h1>에이전트는 일을 하지만, &quot;나&quot;를 모른다</h1>
+    </div>
+    <p class=&quot;page&quot;>02</p>
+  </header>
+
+  <main>
+    <section class=&quot;statement&quot;>
+      <div>
+        <h2>generic AI는<br><strong>목소리</strong>를 잃게 만든다</h2>
+        <p>기존 agent stack은 문맥은 처리해도 화자의 심리, 말투, 가면, 관계 맥락까지는 재현하지 못합니다.</p>
+      </div>
+      <ul class=&quot;pain-bars&quot;>
+        <li><strong>문서 있음</strong>md로 정리해도 실제 실행에서 무시됨</li>
+        <li><strong>운영 빈도</strong>콘텐츠, 댓글, 답글, 의사결정 전 과정에서 반복</li>
+        <li><strong>결과</strong>내 페르소나가 납작해지고 계정 품질이 무너짐</li>
+      </ul>
+    </section>
+
+    <section class=&quot;details&quot;>
+      <article class=&quot;detail&quot;>
+        <p>Target</p>
+        <p>여러 플랫폼에서 AI 인플루언서 계정을 동시에 운영하려는 개인과 에이전시</p>
+      </article>
+      <article class=&quot;detail&quot;>
+        <p>Broken State</p>
+        <p>OpenClaw, oh-my-* 계열, 일반 agent stack은 결국 &quot;나&quot;가 아니라 generic assistant에 가까움</p>
+      </article>
+      <article class=&quot;quote&quot;>
+        <p>&quot;잘 정리된 문서가 있어도 에이전트는 나를 평평하게 소비한다.&quot;</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>핵심 문제: 맥락 자동화는 있는데 자기 투영 자동화는 없다.</p>
+  </footer>
+</body>
+</html>
+" sandbox="allow-same-origin"></iframe>
+        <iframe class="slide-frame" data-slide="3" srcdoc="<!DOCTYPE html>
+<html lang=&quot;ko&quot;>
+<head>
+<base href=&quot;./&quot;>
+<script>
+(() => {
+  const slideFile = &quot;slide-03.html&quot;;
+  const localAssetPrefix = &quot;./assets/&quot;;
+  const absolutePathRe = /^(file:\/\/|\/Users\/|\/home\/|\/var\/|\/tmp\/|\/private\/|\/Volumes\/|[A-Za-z]:[\\/]|\\\\)/i;
+  const prefix = '[slides-grab:image]';
+
+  function describeElement(element) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) return '';
+    if (element === document.body) return 'body';
+
+    const parts = [];
+    let current = element;
+    while (current &amp;&amp; current.nodeType === Node.ELEMENT_NODE &amp;&amp; current !== document.body) {
+      let part = current.tagName.toLowerCase();
+      if (current.id) {
+        part += '#' + current.id;
+        parts.unshift(part);
+        break;
+      }
+      if (current.classList.length > 0) {
+        part += '.' + Array.from(current.classList).slice(0, 2).join('.');
+      }
+      parts.unshift(part);
+      current = current.parentElement;
+    }
+    return 'body > ' + parts.join(' > ');
+  }
+
+  function warn(message, detail) {
+    console.warn(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  function fail(message, detail) {
+    console.error(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  window.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+    const src = (target.getAttribute('src') || target.currentSrc || '').trim();
+    if (!src || src.startsWith('data:')) return;
+    if (src.startsWith(localAssetPrefix)) {
+      fail('missing local asset', { src });
+      return;
+    }
+    fail('image failed to load', { src });
+  }, true);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    for (const image of document.querySelectorAll('img[src]')) {
+      const src = (image.getAttribute('src') || '').trim();
+      if (!src || src.startsWith('data:')) continue;
+      if (src.startsWith('https://')) {
+        fail('remote image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (src.startsWith('http://')) {
+        fail('remote http:// image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (absolutePathRe.test(src) || src.startsWith('/')) {
+        fail('non-portable image path is unsupported', { src });
+        continue;
+      }
+      if (!src.startsWith(localAssetPrefix)) {
+        warn('noncanonical local image path should use ./assets/<file>', { src });
+      }
+    }
+
+    for (const element of document.body.querySelectorAll('*')) {
+      if (element === document.body) continue;
+      const backgroundImage = window.getComputedStyle(element).backgroundImage;
+      if (!backgroundImage || backgroundImage === 'none' || !backgroundImage.includes('url(')) continue;
+      fail('non-body background-image is not supported for slide content', {
+        element: describeElement(element),
+        backgroundImage,
+      });
+    }
+  });
+})();
+</script>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+  <title>Polysona - Evidence</title>
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+  <style>
+    :root {
+      --bg: #07111d;
+      --surface: rgba(12, 26, 44, 0.8);
+      --surface-2: rgba(18, 37, 59, 0.72);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --mint: #5ef2c5;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(67,199,255,0.17), transparent 26%),
+        radial-gradient(circle at 88% 86%, rgba(94,242,197,0.15), transparent 26%),
+        linear-gradient(180deg, #09131f 0%, #05101a 100%);
+      color: var(--text);
+      padding: 24pt 28pt 20pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 26pt;
+      line-height: 1.16;
+      letter-spacing: -0.045em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 0.84fr 1.16fr;
+      gap: 16pt;
+      height: 292pt;
+    }
+    .hero-stat {
+      border-radius: 24pt;
+      background: linear-gradient(180deg, rgba(10,23,38,0.88), rgba(8,19,31,0.96));
+      border: 1px solid var(--border);
+      padding: 22pt 18pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hero-stat p:first-child {
+      font-size: 9pt;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .hero-stat h2 {
+      font-size: 72pt;
+      line-height: 1.08;
+      letter-spacing: -0.07em;
+      color: var(--mint);
+      margin: 10pt 0 8pt;
+      padding-bottom: 4pt;
+    }
+    .hero-stat p:nth-child(3) {
+      font-size: 13pt;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .hero-stat p:last-child {
+      font-size: 10pt;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .proofs {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 12pt;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12pt;
+    }
+    .card {
+      border-radius: 20pt;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 15pt 16pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8pt;
+    }
+    .card h3 {
+      font-size: 18pt;
+      line-height: 1.12;
+      letter-spacing: -0.03em;
+      margin-bottom: 8pt;
+    }
+    .card p:last-child, .buyers li {
+      font-size: 11pt;
+      line-height: 1.55;
+      color: #d7e9fb;
+    }
+    .buyers {
+      border-radius: 20pt;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 16pt;
+    }
+    .buyers p {
+      font-size: 8.5pt;
+      color: var(--mint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10pt;
+    }
+    .buyers ul {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10pt;
+    }
+    .buyers li {
+      list-style: none;
+      padding-top: 8pt;
+      border-top: 2pt solid rgba(94,242,197,0.45);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class=&quot;eyebrow&quot;>Evidence</p>
+      <h1>이 문제는 바로 돈과 반응으로 연결된다</h1>
+    </div>
+    <p class=&quot;page&quot;>03</p>
+  </header>
+
+  <main>
+    <section class=&quot;hero-stat&quot;>
+      <div>
+        <p>Signal From Reality</p>
+        <h2>+50</h2>
+        <p>내 말투로 답글을 달았더니 팔로워가 늘었습니다.</p>
+      </div>
+      <p>그 한 번의 반응이 &quot;내 페르소나를 대신 운영하는 에이전트&quot;를 만들게 된 직접적인 계기였습니다.</p>
+    </section>
+
+    <section class=&quot;proofs&quot;>
+      <div class=&quot;proof-grid&quot;>
+        <article class=&quot;card&quot;>
+          <p>Creator Story</p>
+          <h3>답글 에이전트에서 시작</h3>
+          <p>나 대신 답글을 다니는 에이전트를 만들다가, 상황별 여러 가면까지 다루고 싶어졌습니다.</p>
+        </article>
+        <article class=&quot;card&quot;>
+          <p>Buyer Intent</p>
+          <h3>고객은 이미 가격을 물었다</h3>
+          <p>AX 컨설팅 고객사들이 AI 인플루언서 운영 자동화를 원했고 구매 의사를 명확히 밝혔습니다.</p>
+        </article>
+      </div>
+      <section class=&quot;buyers&quot;>
+        <p>Demand Came From</p>
+        <ul>
+          <li>뷰티 브랜드 운영팀</li>
+          <li>패션 / F&amp;B 마케팅 조직</li>
+          <li>콘텐츠 에이전시와 AX 고객사</li>
+        </ul>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
+" sandbox="allow-same-origin"></iframe>
+        <iframe class="slide-frame" data-slide="4" srcdoc="<!DOCTYPE html>
+<html lang=&quot;ko&quot;>
+<head>
+<base href=&quot;./&quot;>
+<script>
+(() => {
+  const slideFile = &quot;slide-04.html&quot;;
+  const localAssetPrefix = &quot;./assets/&quot;;
+  const absolutePathRe = /^(file:\/\/|\/Users\/|\/home\/|\/var\/|\/tmp\/|\/private\/|\/Volumes\/|[A-Za-z]:[\\/]|\\\\)/i;
+  const prefix = '[slides-grab:image]';
+
+  function describeElement(element) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) return '';
+    if (element === document.body) return 'body';
+
+    const parts = [];
+    let current = element;
+    while (current &amp;&amp; current.nodeType === Node.ELEMENT_NODE &amp;&amp; current !== document.body) {
+      let part = current.tagName.toLowerCase();
+      if (current.id) {
+        part += '#' + current.id;
+        parts.unshift(part);
+        break;
+      }
+      if (current.classList.length > 0) {
+        part += '.' + Array.from(current.classList).slice(0, 2).join('.');
+      }
+      parts.unshift(part);
+      current = current.parentElement;
+    }
+    return 'body > ' + parts.join(' > ');
+  }
+
+  function warn(message, detail) {
+    console.warn(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  function fail(message, detail) {
+    console.error(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  window.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+    const src = (target.getAttribute('src') || target.currentSrc || '').trim();
+    if (!src || src.startsWith('data:')) return;
+    if (src.startsWith(localAssetPrefix)) {
+      fail('missing local asset', { src });
+      return;
+    }
+    fail('image failed to load', { src });
+  }, true);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    for (const image of document.querySelectorAll('img[src]')) {
+      const src = (image.getAttribute('src') || '').trim();
+      if (!src || src.startsWith('data:')) continue;
+      if (src.startsWith('https://')) {
+        fail('remote image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (src.startsWith('http://')) {
+        fail('remote http:// image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (absolutePathRe.test(src) || src.startsWith('/')) {
+        fail('non-portable image path is unsupported', { src });
+        continue;
+      }
+      if (!src.startsWith(localAssetPrefix)) {
+        warn('noncanonical local image path should use ./assets/<file>', { src });
+      }
+    }
+
+    for (const element of document.body.querySelectorAll('*')) {
+      if (element === document.body) continue;
+      const backgroundImage = window.getComputedStyle(element).backgroundImage;
+      if (!backgroundImage || backgroundImage === 'none' || !backgroundImage.includes('url(')) continue;
+      fail('non-body background-image is not supported for slide content', {
+        element: describeElement(element),
+        backgroundImage,
+      });
+    }
+  });
+})();
+</script>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+  <title>Polysona - Solution</title>
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+  <style>
+    :root {
+      --bg: #07111d;
+      --surface: rgba(11, 24, 39, 0.8);
+      --surface-2: rgba(19, 38, 59, 0.7);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --accent-soft: #9be7ff;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(67,199,255,0.16), transparent 24%),
+        linear-gradient(180deg, #08121f 0%, #05101a 100%);
+      color: var(--text);
+      padding: 24pt 26pt 20pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 24pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      max-width: 550pt;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    .definition {
+      margin-bottom: 12pt;
+      font-size: 11.5pt;
+      color: var(--accent-soft);
+      line-height: 1.45;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8pt;
+      margin-bottom: 14pt;
+      position: relative;
+    }
+    .step {
+      border-radius: 20pt;
+      background: linear-gradient(180deg, rgba(14,27,44,0.86), rgba(10,22,36,0.96));
+      border: 1px solid var(--border);
+      padding: 14pt 12pt;
+      min-height: 164pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .step p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8pt;
+    }
+    .step h2 {
+      font-size: 16pt;
+      line-height: 1.14;
+      letter-spacing: -0.035em;
+      margin-bottom: 10pt;
+    }
+    .step ul {
+      display: grid;
+      gap: 6pt;
+    }
+    .step li {
+      list-style: none;
+      font-size: 10pt;
+      line-height: 1.45;
+      color: #d8eafb;
+      position: relative;
+      padding-left: 9pt;
+    }
+    .step li::before {
+      content: &quot;&quot;;
+      width: 4pt;
+      height: 4pt;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 6pt;
+    }
+    .footer-band {
+      border-radius: 18pt;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 12pt 14pt;
+      display: flex;
+      justify-content: space-between;
+      gap: 16pt;
+      align-items: center;
+    }
+    .footer-band p {
+      font-size: 10.5pt;
+      line-height: 1.5;
+      color: #d7e8fb;
+    }
+    .footer-band strong { color: var(--accent-soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class=&quot;eyebrow&quot;>Solution</p>
+      <h1>심리학적 Agent Harness 기반 멀티 페르소나 운영 시스템</h1>
+    </div>
+    <p class=&quot;page&quot;>04</p>
+  </header>
+
+  <p class=&quot;definition&quot;>Polysona는 인터뷰와 메타인지를 통해 사용자를 구조화하고, 그 사람에 맞는 멀티 페르소나 콘텐츠 운영 루프를 만듭니다.</p>
+
+  <main class=&quot;flow&quot;>
+    <article class=&quot;step&quot;>
+      <div>
+        <p>01 Interview</p>
+        <h2>나를 묻는다</h2>
+      </div>
+      <ul>
+        <li>10-framework 기반 인터뷰</li>
+        <li>심리학적 / 철학적 단서 수집</li>
+        <li>표면 니즈와 내면 패턴 분리</li>
+      </ul>
+    </article>
+    <article class=&quot;step&quot;>
+      <div>
+        <p>02 Structuring</p>
+        <h2>나를 구조화한다</h2>
+      </div>
+      <ul>
+        <li>persona.md / nuance.md / accounts.md 생성</li>
+        <li>상황별 여러 가면을 분리 관리</li>
+        <li>generic prompt 대신 persona harness 적용</li>
+      </ul>
+    </article>
+    <article class=&quot;step&quot;>
+      <div>
+        <p>03 Generation</p>
+        <h2>가장 &quot;나&quot;다운 콘텐츠를 만든다</h2>
+      </div>
+      <ul>
+        <li>플랫폼별 초안 자동 생성</li>
+        <li>말투, 관점, 역할별 페르소나 반영</li>
+        <li>어떤 AI agent 위에서도 동작</li>
+      </ul>
+    </article>
+    <article class=&quot;step&quot;>
+      <div>
+        <p>04 QA Loop</p>
+        <h2>virtual follower로 검증한다</h2>
+      </div>
+      <ul>
+        <li>버추얼 팔로워가 반응 시뮬레이션</li>
+        <li>드래프트 QA 후 상위안 추천</li>
+        <li>출판과 피드백 루프까지 연결</li>
+      </ul>
+    </article>
+  </main>
+
+  <section class=&quot;footer-band&quot;>
+    <p><strong>MVP demo:</strong> 인터뷰 -> 메타인지 기반 페르소나화 -> 콘텐츠 생성 -> QA</p>
+    <p><strong>Promise:</strong> &quot;AI를 붙이는 것&quot;이 아니라 &quot;나를 운영 가능한 시스템으로 만드는 것&quot;</p>
+  </section>
+</body>
+</html>
+" sandbox="allow-same-origin"></iframe>
+        <iframe class="slide-frame" data-slide="5" srcdoc="<!DOCTYPE html>
+<html lang=&quot;ko&quot;>
+<head>
+<base href=&quot;./&quot;>
+<script>
+(() => {
+  const slideFile = &quot;slide-05.html&quot;;
+  const localAssetPrefix = &quot;./assets/&quot;;
+  const absolutePathRe = /^(file:\/\/|\/Users\/|\/home\/|\/var\/|\/tmp\/|\/private\/|\/Volumes\/|[A-Za-z]:[\\/]|\\\\)/i;
+  const prefix = '[slides-grab:image]';
+
+  function describeElement(element) {
+    if (!element || element.nodeType !== Node.ELEMENT_NODE) return '';
+    if (element === document.body) return 'body';
+
+    const parts = [];
+    let current = element;
+    while (current &amp;&amp; current.nodeType === Node.ELEMENT_NODE &amp;&amp; current !== document.body) {
+      let part = current.tagName.toLowerCase();
+      if (current.id) {
+        part += '#' + current.id;
+        parts.unshift(part);
+        break;
+      }
+      if (current.classList.length > 0) {
+        part += '.' + Array.from(current.classList).slice(0, 2).join('.');
+      }
+      parts.unshift(part);
+      current = current.parentElement;
+    }
+    return 'body > ' + parts.join(' > ');
+  }
+
+  function warn(message, detail) {
+    console.warn(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  function fail(message, detail) {
+    console.error(prefix + ' ' + slideFile + ': ' + message, detail);
+  }
+
+  window.addEventListener('error', (event) => {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+    const src = (target.getAttribute('src') || target.currentSrc || '').trim();
+    if (!src || src.startsWith('data:')) return;
+    if (src.startsWith(localAssetPrefix)) {
+      fail('missing local asset', { src });
+      return;
+    }
+    fail('image failed to load', { src });
+  }, true);
+
+  window.addEventListener('DOMContentLoaded', () => {
+    for (const image of document.querySelectorAll('img[src]')) {
+      const src = (image.getAttribute('src') || '').trim();
+      if (!src || src.startsWith('data:')) continue;
+      if (src.startsWith('https://')) {
+        fail('remote image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (src.startsWith('http://')) {
+        fail('remote http:// image URL is unsupported in saved slides; download it into ./assets/<file>', { src });
+        continue;
+      }
+      if (absolutePathRe.test(src) || src.startsWith('/')) {
+        fail('non-portable image path is unsupported', { src });
+        continue;
+      }
+      if (!src.startsWith(localAssetPrefix)) {
+        warn('noncanonical local image path should use ./assets/<file>', { src });
+      }
+    }
+
+    for (const element of document.body.querySelectorAll('*')) {
+      if (element === document.body) continue;
+      const backgroundImage = window.getComputedStyle(element).backgroundImage;
+      if (!backgroundImage || backgroundImage === 'none' || !backgroundImage.includes('url(')) continue;
+      fail('non-body background-image is not supported for slide content', {
+        element: describeElement(element),
+        backgroundImage,
+      });
+    }
+  });
+})();
+</script>
+  <meta charset=&quot;UTF-8&quot;>
+  <meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;>
+  <title>Polysona - Ralph Setup</title>
+  <link rel=&quot;stylesheet&quot; href=&quot;https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css&quot;>
+  <style>
+    :root {
+      --bg: #06101b;
+      --surface: rgba(12, 24, 39, 0.82);
+      --surface-2: rgba(18, 36, 57, 0.72);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --mint: #5ef2c5;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(67,199,255,0.18), transparent 24%),
+        radial-gradient(circle at 10% 100%, rgba(94,242,197,0.14), transparent 28%),
+        linear-gradient(180deg, #08121e 0%, #051019 100%);
+      color: var(--text);
+      padding: 24pt 26pt 18pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 26pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12pt;
+      height: 218pt;
+    }
+    .panel {
+      border-radius: 22pt;
+      background: linear-gradient(180deg, rgba(12,25,41,0.84), rgba(8,19,31,0.95));
+      border: 1px solid var(--border);
+      padding: 14pt 14pt 12pt;
+      height: 100%;
+    }
+    .panel p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10pt;
+    }
+    .panel h2 {
+      font-size: 17pt;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 10pt;
+    }
+    .stack, .points {
+      display: grid;
+      gap: 6pt;
+    }
+    .stack li, .points li {
+      list-style: none;
+      border-radius: 16pt;
+      background: var(--surface-2);
+      padding: 8pt 9pt;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .stack strong, .points strong {
+      display: block;
+      font-size: 10pt;
+      color: var(--text);
+      margin-bottom: 3pt;
+    }
+    .stack span, .points span {
+      font-size: 9.2pt;
+      line-height: 1.35;
+      color: #d7e8fb;
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 18pt;
+      background: rgba(94,242,197,0.08);
+      border: 1px solid rgba(94,242,197,0.25);
+      padding: 7pt 9pt;
+    }
+    .status p:first-child {
+      font-size: 8.5pt;
+      color: var(--mint);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4pt;
+    }
+    .status p:last-child {
+      font-size: 9pt;
+      color: var(--text);
+    }
+    .status strong {
+      font-size: 16pt;
+      color: var(--mint);
+      letter-spacing: -0.05em;
+    }
+    .panel .status {
+      margin-top: 10pt;
+    }
+    footer {
+      display: none;
+    }
+    footer p {
+      font-size: 9pt;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class=&quot;eyebrow&quot;>Ralph Setup / Progress</p>
+      <h1>랄프 역량 = 멀티 에이전트 운영력</h1>
+    </div>
+    <p class=&quot;page&quot;>05</p>
+  </header>
+
+  <main>
+    <section class=&quot;panel&quot;>
+      <p>Operating Stack</p>
+      <h2>에이전트를 쓰는 수준이 아니라<br>운영 루프를 설계합니다</h2>
+      <ul class=&quot;stack&quot;>
+        <li><strong>Core tools</strong><span>oh-my-openagent, Codex, Claude Code</span></li>
+        <li><strong>Loop discipline</strong><span>ralph-loop with ulw로 반복과 개선을 유지</span></li>
+        <li><strong>Product stance</strong><span>persona-aware agent harness를 직접 설계</span></li>
+      </ul>
+    </section>
+
+    <section class=&quot;panel&quot;>
+      <p>Execution Signal</p>
+      <h2>지금 이미 돌아가고 있고,<br>실사용성과 사업성을 함께 본다</h2>
+      <ul class=&quot;points&quot;>
+        <li><strong>MVP running</strong><span>핵심 루프는 이미 작동 중</span></li>
+        <li><strong>Real demand</strong><span>고객은 자동화 운영 니즈와 가격 감각을 드러냄</span></li>
+        <li><strong>Why us</strong><span>운영 방식 자체가 곧 경쟁력</span></li>
+      </ul>
+      <section class=&quot;status&quot;>
+        <div>
+          <p>Current Status</p>
+          <p>MVP live + validation in progress</p>
+        </div>
+        <strong>LIVE</strong>
+      </section>
+    </section>
+  </main>
+
+  <footer>
+    <p>마지막 메시지: Polysona는 템플릿을 더 잘 만드는 툴이 아니라, 여러 플랫폼에서 &quot;나&quot;를 여러 페르소나로 운영하게 만드는 시스템입니다.</p>
+  </footer>
+</body>
+</html>
+" sandbox="allow-same-origin"></iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const TOTAL = 5;
+    let current = 1;
+
+    const frames = document.querySelectorAll('.slide-frame');
+    const counter = document.getElementById('counter');
+    const btnPrev = document.getElementById('btn-prev');
+    const btnNext = document.getElementById('btn-next');
+    const scaler = document.getElementById('scaler');
+    const viewport = document.getElementById('viewport');
+
+    function goTo(n) {
+      n = Math.max(1, Math.min(TOTAL, n));
+      if (n === current) return;
+      frames[current - 1].classList.remove('active');
+      current = n;
+      frames[current - 1].classList.add('active');
+      counter.textContent = current + ' / ' + TOTAL;
+      btnPrev.disabled = current === 1;
+      btnNext.disabled = current === TOTAL;
+    }
+
+    function next() { goTo(current + 1); }
+    function prev() { goTo(current - 1); }
+
+    btnPrev.addEventListener('click', prev);
+    btnNext.addEventListener('click', next);
+    btnPrev.disabled = true;
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); next(); }
+      else if (e.key === 'ArrowLeft') { e.preventDefault(); prev(); }
+      else if (e.key === 'Home') { e.preventDefault(); goTo(1); }
+      else if (e.key === 'End') { e.preventDefault(); goTo(TOTAL); }
+      else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      }
+    });
+
+    // Fullscreen
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+    document.getElementById('btn-fs').addEventListener('click', toggleFullscreen);
+
+    // Auto-scale to fit viewport (95% fit)
+    function rescale() {
+      const vw = viewport.clientWidth;
+      const vh = viewport.clientHeight;
+      const slideW = scaler.offsetWidth;
+      const slideH = scaler.offsetHeight;
+      const scale = Math.min(vw / slideW, vh / slideH) * 0.95;
+      scaler.style.transform = 'scale(' + scale + ')';
+    }
+
+    window.addEventListener('resize', rescale);
+    document.addEventListener('fullscreenchange', () => setTimeout(rescale, 100));
+    rescale();
+  </script>
+</body>
+</html>
