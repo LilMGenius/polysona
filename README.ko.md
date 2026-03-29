@@ -79,8 +79,9 @@ gstack은 개리 탄(Garry Tan)의 뇌를 줍니다. **polysona는 당신의 뇌
 claude plugin marketplace add ./.claude-plugin/marketplace.json
 # 2. 플러그인 설치
 claude plugin install polysona
-# 3. 세션 시작 (Hooks 자동 실행)
-# Then: /interview → /trend → /content x → /qa → /publish
+# 3. 세션 시작
+# Then: /interview → /introduce → /trend → /content x → /qa → /publish
+# Hooks 동작은 호스트 지원 방식에 따라 달라질 수 있습니다
 ```
 
 ## 5 Agents

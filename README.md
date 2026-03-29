@@ -79,8 +79,9 @@ gstack gives you Garry Tan's brain. **polysona gives you yours.**
 claude plugin marketplace add ./.claude-plugin/marketplace.json
 # 2. Install plugin
 claude plugin install polysona
-# 3. Start session (Hooks will auto-run)
-# Then: /interview → /trend → /content x → /qa → /publish
+# 3. Start session
+# Then: /interview → /introduce → /trend → /content x → /qa → /publish
+# Hooks may apply via hooks/hooks.json depending on host support
 ```
 
 ## 5 Agents

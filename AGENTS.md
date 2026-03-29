@@ -37,8 +37,9 @@
 ## Quick Start (Claude Code)
 
 ```bash
+claude plugin marketplace add ./.claude-plugin/marketplace.json
 claude plugin install polysona
 ```
 
 - Use `/interview`, `/introduce`, `/trend`, `/content [platform]`, `/qa`, `/publish`, `/status`, `/export`.
-- Keep hooks in `hooks/hooks.json`.
+- Keep lifecycle hooks in `hooks/hooks.json`. Do not assume every host auto-runs them the same way.
