@@ -1,0 +1,5 @@
+[
+  { "event": "SessionStart", "command": "bash hooks/session-start.sh" },
+  { "event": "PreToolUse", "command": "bash hooks/pre-tool-use.sh" },
+  { "event": "PostToolUse", "command": "bash hooks/post-tool-use.sh" }
+]

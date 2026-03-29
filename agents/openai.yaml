@@ -1,0 +1,18 @@
+# Polysona — Codex agent definitions
+# Statement 1: OpenAI Codex integration (required by RALPHTHON_GUIDE.md)
+agents:
+  - name: profiler
+    description: Deep psychology-based interviewer using 10 frameworks to extract unconscious patterns
+    skill: $interview
+  - name: trendsetter
+    description: Domain trend detector that recommends content topics based on your persona
+    skill: $trend
+  - name: content-writer
+    description: Platform-specific content generator conditioned on your persona
+    skill: $content
+  - name: virtual-follower
+    description: QA simulator that evaluates content as virtual followers and recommends TOP 5
+    skill: $qa
+  - name: admin
+    description: Publisher and performance tracker for content lifecycle management
+    skill: $publish
