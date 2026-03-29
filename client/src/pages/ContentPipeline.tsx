@@ -31,8 +31,19 @@ export default function ContentPipeline() {
   if (error) return <div className="text-red-400 border border-red-900/50 bg-red-950/20 p-4 rounded-lg">Error loading data</div>;
 
   const extractPlatform = (filename: string) => {
-    const parts = filename.split('_');
-    return parts.length > 0 ? parts[0] : 'unknown';
+    const stem = filename.replace(/\.md$/i, '');
+    const underscoreParts = stem.split('_');
+
+    if (underscoreParts.length > 0 && ['x', 'threads', 'linkedin', 'naver-blog', 'brunch'].includes(underscoreParts[0])) {
+      return underscoreParts[0];
+    }
+
+    const hyphenParts = stem.split('-');
+    if (hyphenParts.length >= 4 && /^\d{4}$/.test(hyphenParts[0]) && /^\d{2}$/.test(hyphenParts[1]) && /^\d{2}$/.test(hyphenParts[2])) {
+      return hyphenParts[3] ?? 'unknown';
+    }
+
+    return 'unknown';
   };
 
   const platforms = ['all', 'x', 'threads', 'linkedin', 'naver-blog', 'brunch'];
