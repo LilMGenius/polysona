@@ -1,6 +1,9 @@
 {
   "name": "polysona",
   "version": "1.2.1",
+  "author": {
+    "name": "LilMGenius"
+  },
   "description": "Build and run multiple personas across any AI agent.",
   "skills": [
     "./skills/interview",
