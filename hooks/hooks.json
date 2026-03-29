@@ -1,5 +1,35 @@
-[
-  { "event": "SessionStart", "command": "bash hooks/session-start.sh" },
-  { "event": "PreToolUse", "command": "bash hooks/pre-tool-use.sh" },
-  { "event": "PostToolUse", "command": "bash hooks/post-tool-use.sh" }
-]
+{
+  "description": "Polysona lifecycle hooks for persona management",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "bash",
+            "command": "bash hooks/session-start.sh"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "bash",
+            "command": "bash hooks/pre-tool-use.sh"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "bash",
+            "command": "bash hooks/post-tool-use.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

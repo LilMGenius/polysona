@@ -1,23 +1,22 @@
 {
   "name": "polysona",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Build and run multiple personas across any AI agent.",
   "skills": [
-    "skills/interview/SKILL.md",
-    "skills/introduce/SKILL.md",
-    "skills/trend/SKILL.md",
-    "skills/content/SKILL.md",
-    "skills/qa/SKILL.md",
-    "skills/publish/SKILL.md",
-    "skills/status/SKILL.md",
-    "skills/export/SKILL.md"
+    "./skills/interview",
+    "./skills/introduce",
+    "./skills/trend",
+    "./skills/content",
+    "./skills/qa",
+    "./skills/publish",
+    "./skills/status",
+    "./skills/export"
   ],
   "agents": [
-    "agents/profiler.md",
-    "agents/trendsetter.md",
-    "agents/content-writer.md",
-    "agents/virtual-follower.md",
-    "agents/admin.md"
-  ],
-  "hooks": "hooks/hooks.json"
+    "./agents/profiler.md",
+    "./agents/trendsetter.md",
+    "./agents/content-writer.md",
+    "./agents/virtual-follower.md",
+    "./agents/admin.md"
+  ]
 }
