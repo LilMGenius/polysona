@@ -1,7 +1,20 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import Layout from './components/Layout';
+import Home from './pages/Home';
+import PersonaDetail from './pages/PersonaDetail';
+import ContentPipeline from './pages/ContentPipeline';
+
 export default function App() {
   return (
-    <div className="min-h-screen bg-gray-950 text-gray-100">
-      <h1 className="p-8 text-2xl font-bold">Polysona Dashboard</h1>
-    </div>
-  )
+    <BrowserRouter>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/personas" element={<Navigate to="/" replace />} />
+          <Route path="/personas/:id" element={<PersonaDetail />} />
+          <Route path="/content" element={<ContentPipeline />} />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
+  );
 }
