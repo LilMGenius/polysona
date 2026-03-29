@@ -73,7 +73,7 @@ function deterministicScore(personaId: string, followerId: string, dimension: st
 
 const listContentFiles = async (path: string) =>
   (await readDir(path))
-    .filter((entry) => entry.isFile())
+    .filter((entry) => entry.isFile() && !entry.name.startsWith('.'))
     .map((entry) => entry.name)
     .sort((left, right) => left.localeCompare(right))
 
@@ -181,6 +181,7 @@ apiRoutes.get('/agents/status', async (c) => {
         status: 'idle' as const,
         agentFileExists: await Bun.file(`agents/${agent.name}.md`).exists(),
         skillFileExists: skillNames.has(skillDir) && await Bun.file(agent.skillFile).exists(),
+        skillCount: skillNames.has(skillDir) ? 1 : 0,
         lastActivity: null,
       }
     }),

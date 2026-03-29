@@ -11,6 +11,8 @@ export default function AgentMonitor() {
       .then(data => {
         if (Array.isArray(data)) {
           setAgents(data);
+        } else if (data?.agents) {
+          setAgents(data.agents);
         } else {
           setAgents([]);
         }

@@ -16,20 +16,14 @@ export default function Home() {
     ])
       .then(([statusData, personasData, agentsData]) => {
         setStatus(statusData);
-        setPersonas(personasData?.personas || []);
-        
-        // Transform agents if needed
-        if (agentsData?.agents) {
+        setPersonas(Array.isArray(personasData) ? personasData : (personasData?.personas || []));
+
+        if (Array.isArray(agentsData)) {
+          setAgents(agentsData);
+        } else if (agentsData?.agents) {
           setAgents(agentsData.agents);
         } else {
-          // Fallback to static if endpoint doesn't return list properly
-          setAgents([
-            { name: 'profiler', description: 'Deep psychology interviewer', status: 'idle', lastActivity: null, skillCount: 1 },
-            { name: 'trendsetter', description: 'Trend detector', status: 'idle', lastActivity: null, skillCount: 1 },
-            { name: 'content-writer', description: 'Platform content generator', status: 'idle', lastActivity: null, skillCount: 1 },
-            { name: 'virtual-follower', description: 'QA simulator', status: 'idle', lastActivity: null, skillCount: 1 },
-            { name: 'admin', description: 'Publisher and tracker', status: 'idle', lastActivity: null, skillCount: 1 },
-          ]);
+          setAgents([]);
         }
         setLoading(false);
       })
@@ -48,7 +42,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-gray-900 border border-gray-800 p-6 rounded-xl flex flex-col">
           <span className="text-gray-500 font-mono text-xs uppercase mb-2 tracking-widest">Version</span>
-          <span className="text-2xl font-bold text-teal-400 font-mono">{status?.version || '0.3.0'}</span>
+          <span className="text-2xl font-bold text-teal-400 font-mono">{status?.version || '1.2.1'}</span>
         </div>
         <div className="bg-gray-900 border border-gray-800 p-6 rounded-xl flex flex-col">
           <span className="text-gray-500 font-mono text-xs uppercase mb-2 tracking-widest">Workspace</span>
