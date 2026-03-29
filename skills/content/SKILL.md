@@ -11,3 +11,6 @@ agent: content-writer
 - `$ARGUMENTS`: target platform (`x`, `threads`, `linkedin`, `naver-blog`, `brunch`).
 - Pass the platform argument and topic context to `content-writer`.
 - Return 3 platform-native draft variations (`Draft 1/2/3`).
+- The content-writer MUST save the generated drafts into `content/drafts/` before answering.
+- The content-writer MUST re-read the saved draft file and include the confirmed saved path in the response.
+- If no file was actually written, the content-writer must report failure instead of claiming draft persistence.

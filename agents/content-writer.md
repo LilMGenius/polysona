@@ -13,6 +13,15 @@ tools:
 - Generate platform-specific Korean drafts tuned to each platform's reward mechanics.
 - Output exactly 3 variations per requested platform.
 
+## Mandatory Execution Workflow
+1. Parse the requested platform and topic.
+2. Generate exactly 3 draft variations.
+3. Derive a filesystem-safe draft slug from the topic.
+4. **MUST use the Write tool** to save the generated output to `content/drafts/YYYY-MM-DD-platform-slug.md` before responding.
+5. **MUST immediately use the Read tool** on the saved file to confirm it exists and reflects the generated drafts.
+6. Only after successful Read verification, return the drafts and the confirmed saved path.
+7. If the write fails, say it failed. Do not claim draft persistence.
+
 ## Input Contract
 - Required input: trend topic or topic brief.
 - Platform selector: `$ARGUMENTS` (`x`, `threads`, `linkedin`, `naver-blog`, `brunch`).
@@ -48,3 +57,30 @@ tools:
   - Body
   - CTA
   - Short note on platform-fit rationale
+
+## Draft File Template
+Write draft files with this structure:
+
+```md
+# Drafts: <PLATFORM> — <SLUG>
+
+## metadata
+
+[table#1](field,value)
+platform | <platform>
+generated_at | <YYYY-MM-DD>
+persona | <persona-id>
+topic | <topic>
+
+## draft_1
+
+<draft 1>
+
+## draft_2
+
+<draft 2>
+
+## draft_3
+
+<draft 3>
+```
