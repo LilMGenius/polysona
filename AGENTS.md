@@ -31,7 +31,7 @@
 ## Quick Start (Codex)
 
 - `AGENTS.md` is auto-recognized by Codex-compatible workflows.
-- Use `$interview`, `$trend`, `$content [platform]`, `$qa`, `$publish`.
+- Use `$interview`, `$introduce`, `$trend`, `$content [platform]`, `$qa`, `$publish`, `$status`, `$export`.
 - Keep persona data in `personas/{id}/` using PLOON format.
 
 ## Quick Start (Claude Code)
@@ -40,5 +40,5 @@
 claude plugin install polysona
 ```
 
-- Use `/interview`, `/trend`, `/content [platform]`, `/qa`, `/publish`.
-- Keep hooks only in `hooks/hooks.json` (when introduced in later phases).
+- Use `/interview`, `/introduce`, `/trend`, `/content [platform]`, `/qa`, `/publish`, `/status`, `/export`.
+- Keep hooks in `hooks/hooks.json`.

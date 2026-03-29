@@ -72,7 +72,7 @@ gstack은 개리 탄(Garry Tan)의 뇌를 줍니다. **polysona는 당신의 뇌
 ```bash
 # Codex (primary)
 # AGENTS.md is auto-recognized by Codex
-# Use $interview, $content, $qa in your Codex session
+# Use $interview, $trend, $content x, $qa, $publish, $status, $export in your Codex session
 
 # Claude Code
 # 1. 로컬 마켓플레이스 추가
@@ -80,7 +80,7 @@ claude plugin marketplace add ./.claude-plugin/marketplace.json
 # 2. 플러그인 설치
 claude plugin install polysona
 # 3. 세션 시작 (Hooks 자동 실행)
-# Then: /interview → /content x → /qa → /publish
+# Then: /interview → /trend → /content x → /qa → /publish
 ```
 
 ## 5 Agents
@@ -93,6 +93,14 @@ claude plugin install polysona
 | **virtual-follower** | 가상 팔로워 QA 시뮬레이터 | `$qa` / `/qa` |
 | **admin** | 게시, 스케줄링 및 성과 추적 | `$publish` / `/publish` |
 
+## 유틸리티 명령어
+
+| 명령어 | 용도 |
+|---|---|
+| `$introduce` / `/introduce` | 현재 페르소나를 세션에 주입합니다 |
+| `$status` / `/status` | 페르소나와 파이프라인 상태를 근거 기반으로 보여줍니다 |
+| `$export` / `/export` | 다른 워크스페이스에 옮길 수 있는 생성 파일을 만듭니다 |
+
 <!-- demo screenshots will be added -->
 
 ## 확장 로드맵 (Roadmap)
@@ -100,17 +108,22 @@ claude plugin install polysona
 **— v1: 핵심 기능 + 국내 플랫폼 우선 —**
 - **v1.0** 텍스트 콘텐츠 생성 (X, Threads, LinkedIn, 네이버 블로그, 브런치)
 - **v1.1** 페르소나 → CLAUDE.md/AGENTS.md 추출 + 멀티 CLI 마켓플레이스 지원
-- **v1.2** 로컬 퍼스트 풀스택 대시보드 (Bun+Hono+Vite+React)
-- **v1.3** 카드뉴스 생성 (이미지 + 텍스트)
-- **v1.4** 숏폼 영상 스크립트 (Reels, Shorts, TikTok)
-- **v1.5** 롱폼 영상 스크립트 (YouTube, Podcast)
+- **v1.2** 로컬 퍼스트 풀스택 대시보드 기반 구축
+- **v1.3** 대시보드 확장 + 파이프라인 가시화 + 제품 polish
+- **v1.4** 트렌드 지식 적재 루프 + 품질 검증 강화
+- **v1.5** 풀버전 대시보드 + 데모 polish
 - **v1.6** 외부 SaaS 연동 (MCP 지원)
 
-**— v2: 글로벌 확장 —**
-- **v2.0** 영어 텍스트 콘텐츠 (X, Threads, LinkedIn, Medium, Substack, Reddit)
-- **v2.1** 영어 카드뉴스
-- **v2.2** 영어 숏폼 스크립트
-- **v2.3** 영어 롱폼 스크립트
+**— v2: 한국어 미디어 확장 —**
+- **v2.0** 카드뉴스 생성 (이미지 + 텍스트)
+- **v2.1** 숏폼 영상 스크립트 (Reels, Shorts, TikTok)
+- **v2.2** 롱폼 영상 스크립트 (YouTube, Podcast)
+
+**— v3: 글로벌 확장 —**
+- **v3.0** 영어 텍스트 콘텐츠 (X, Threads, LinkedIn, Medium, Substack, Reddit)
+- **v3.1** 영어 카드뉴스
+- **v3.2** 영어 숏폼 스크립트
+- **v3.3** 영어 롱폼 스크립트
 
 ## 기여 및 라이선스 (Contributing & License)
 
