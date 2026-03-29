@@ -35,9 +35,19 @@ export default function PersonaDetail() {
 
   const { persona = {}, nuance = {}, accounts = {} } = data;
 
-  const blindGaps = persona.blind?.[0]?.gap 
-    ? [persona.blind[0].gap]
-    : [];
+  const blindGap = Array.isArray(persona.blind)
+    ? persona.blind[0]?.gap
+    : typeof persona.blind?.gap === 'string'
+      ? persona.blind.gap
+      : undefined
+
+  const interviewGaps = Array.isArray(log?.interviewLog)
+    ? log.interviewLog
+        .map((entry) => typeof entry?.content === 'string' && entry.content.startsWith('GAP:') ? entry.content.replace(/^GAP:\s*/, '') : null)
+        .filter((entry): entry is string => Boolean(entry))
+    : []
+
+  const blindGaps = blindGap ? [blindGap, ...interviewGaps] : interviewGaps;
 
   return (
     <div className="space-y-12 max-w-5xl mx-auto pb-16">

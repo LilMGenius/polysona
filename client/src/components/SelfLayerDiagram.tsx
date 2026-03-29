@@ -20,19 +20,54 @@ export interface SelfLayerDiagramProps {
   accounts?: AccountsData;
 }
 
+type TableRow = Record<string, unknown>
+type TableValue = TableRow[] | { table?: TableRow[] } | undefined
+
+function extractRows(value: TableValue): TableRow[] {
+  if (!value) {
+    return []
+  }
+
+  if (Array.isArray(value)) {
+    return value
+  }
+
+  return Array.isArray(value.table) ? value.table : []
+}
+
+function firstNonEmptyString(row: TableRow | undefined, keys: string[]): string | undefined {
+  if (!row) {
+    return undefined
+  }
+
+  for (const key of keys) {
+    const value = row[key]
+    if (typeof value === 'string' && value.trim()) {
+      return value
+    }
+  }
+
+  return undefined
+}
+
 export default function SelfLayerDiagram({ persona, nuance, accounts }: SelfLayerDiagramProps) {
   const getSafeStr = (val: string | undefined, fallback = 'Unknown') => val || fallback;
-  
-  const layer1 = getSafeStr(persona?.blind?.[0]?.johari);
-  const layer2 = getSafeStr(nuance?.voice?.[0]?.register);
-  const layer3 = accounts?.ideal?.map(i => i.name || i.id).join(', ') || 'No ideal set';
-  const layer4 = accounts?.rolemodel?.map(r => r.handle || r.id).join(', ') || 'No rolemodels set';
-  
-  const tags = persona?.core?.[0]?.tags || '';
-  const anti = persona?.core?.[0]?.anti || '';
+  const blindRows = extractRows(persona?.blind as TableValue)
+  const voiceRows = extractRows(nuance?.voice as TableValue)
+  const idealRows = extractRows(accounts?.ideal as TableValue)
+  const rolemodelRows = extractRows(accounts?.rolemodel as TableValue)
+  const coreRows = extractRows(persona?.core as TableValue)
+
+  const layer1 = getSafeStr(firstNonEmptyString(blindRows[0], ['johari', 'description', 'type']));
+  const layer2 = getSafeStr(firstNonEmptyString(voiceRows[0], ['register', 'style', 'tone']));
+  const layer3 = idealRows.map((row) => firstNonEmptyString(row, ['name', 'why', 'id'])).filter(Boolean).join(', ') || 'No ideal set';
+  const layer4 = rolemodelRows.map((row) => firstNonEmptyString(row, ['handle', 'name', 'platform', 'id'])).filter(Boolean).join(', ') || 'No rolemodels set';
+
+  const tags = coreRows.map((row) => firstNonEmptyString(row, ['tags', 'value', 'layer'])).filter(Boolean).join(' · ');
+  const anti = coreRows.map((row) => firstNonEmptyString(row, ['anti', 'source'])).filter(Boolean).join(' · ');
   const layer5 = [tags, anti].filter(Boolean).join(' | ') || 'Unknown core';
-  
-  const gap = persona?.blind?.[0]?.gap;
+
+  const gap = firstNonEmptyString(blindRows[0], ['gap']);
 
   const LayerCard = ({ num, title, content, badge, colorClass }: { num: number, title: string, content: string, badge: string, colorClass: string }) => (
     <div className={`relative flex flex-col p-4 rounded-xl border ${colorClass} transition-all hover:scale-[1.01]`}>
