@@ -3,6 +3,7 @@ import React from 'react';
 export interface PersonaData {
   blind?: { johari?: string; gap?: string }[];
   core?: { tags?: string; anti?: string }[];
+  decide?: { priority?: string; approach?: string }[];
 }
 
 export interface NuanceData {
@@ -57,11 +58,12 @@ export default function SelfLayerDiagram({ persona, nuance, accounts }: SelfLaye
   const idealRows = extractRows(accounts?.ideal as TableValue)
   const rolemodelRows = extractRows(accounts?.rolemodel as TableValue)
   const coreRows = extractRows(persona?.core as TableValue)
+  const decideRows = extractRows(persona?.decide as TableValue)
 
   const layer1 = getSafeStr(firstNonEmptyString(blindRows[0], ['johari', 'description', 'type']));
   const layer2 = getSafeStr(firstNonEmptyString(voiceRows[0], ['register', 'style', 'tone']));
-  const layer3 = idealRows.map((row) => firstNonEmptyString(row, ['name', 'why', 'id'])).filter(Boolean).join(', ') || 'No ideal set';
-  const layer4 = rolemodelRows.map((row) => firstNonEmptyString(row, ['handle', 'name', 'platform', 'id'])).filter(Boolean).join(', ') || 'No rolemodels set';
+  const layer3 = idealRows.map((row) => firstNonEmptyString(row, ['name', 'why', 'id'])).filter(Boolean).join(', ') || decideRows.map((row) => firstNonEmptyString(row, ['priority', 'approach'])).filter(Boolean).join(', ') || 'No ideal signal captured yet';
+  const layer4 = rolemodelRows.map((row) => firstNonEmptyString(row, ['platform', 'why', 'handle', 'name', 'id'])).filter(Boolean).join(', ') || 'No rolemodels set';
 
   const tags = coreRows.map((row) => firstNonEmptyString(row, ['tags', 'value', 'layer'])).filter(Boolean).join(' · ');
   const anti = coreRows.map((row) => firstNonEmptyString(row, ['anti', 'source'])).filter(Boolean).join(' · ');

@@ -6,6 +6,7 @@ export interface AgentStatusCardProps {
   status: 'idle' | 'active' | 'error';
   lastActivity: string | null;
   skillCount: number;
+  badge?: string;
 }
 
 export default function AgentStatusCard({
@@ -13,7 +14,8 @@ export default function AgentStatusCard({
   description,
   status,
   lastActivity,
-  skillCount
+  skillCount,
+  badge,
 }: AgentStatusCardProps) {
   
   const statusStyles = {
@@ -33,6 +35,14 @@ export default function AgentStatusCard({
           <div className={`w-2.5 h-2.5 rounded-full ${style.dot}`} />
         </div>
       </div>
+
+      {badge ? (
+        <div className="mb-3">
+          <span className="inline-flex rounded-md border border-teal-500/20 bg-teal-500/10 px-2 py-1 text-[10px] font-mono uppercase tracking-wider text-teal-300">
+            {badge}
+          </span>
+        </div>
+      ) : null}
       
       <p className="text-sm text-gray-400 mb-4 h-10">{description}</p>
       
@@ -43,7 +53,7 @@ export default function AgentStatusCard({
         </div>
         <div className="flex flex-col items-end">
           <span className="text-[10px] font-mono text-gray-500 uppercase">Skills</span>
-          <span className="text-xs text-gray-300">{skillCount} loaded</span>
+          <span className="text-xs text-gray-300">{skillCount} {skillCount === 1 ? 'skill' : 'skills'}</span>
         </div>
       </div>
     </div>

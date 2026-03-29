@@ -121,11 +121,30 @@ export default function ContentPipeline() {
       </div>
 
       {isEmpty ? (
-        <div className="mt-4 p-12 border border-dashed border-gray-800 rounded-lg text-center bg-gray-900/30 flex-1 flex flex-col items-center justify-center">
-          <p className="text-gray-400 mb-4 text-lg">No content yet.</p>
-          <code className="text-teal-400 bg-gray-950 px-4 py-2 rounded-md border border-gray-800 font-mono text-sm shadow-inner">
-            Run /content in your terminal
-          </code>
+        <div className="mt-4 flex flex-1 flex-col items-center justify-center rounded-2xl border border-dashed border-gray-800 bg-gray-900/30 p-12 text-center">
+          <div className="max-w-2xl">
+            <p className="text-lg font-medium text-gray-200">No content yet.</p>
+            <p className="mt-3 text-sm leading-6 text-gray-400">
+              This page fills after the trendsetter collects topics and the content-writer generates drafts for a platform.
+            </p>
+            <div className="mt-6 grid gap-3 text-left sm:grid-cols-3">
+              <div className="rounded-xl border border-gray-800 bg-gray-950/70 p-4">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Step 1</p>
+                <p className="mt-2 text-sm text-gray-200">Collect topics with <span className="font-mono text-teal-400">/trend</span>.</p>
+              </div>
+              <div className="rounded-xl border border-gray-800 bg-gray-950/70 p-4">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Step 2</p>
+                <p className="mt-2 text-sm text-gray-200">Generate drafts with <span className="font-mono text-teal-400">/content x</span>.</p>
+              </div>
+              <div className="rounded-xl border border-gray-800 bg-gray-950/70 p-4">
+                <p className="text-[10px] font-mono uppercase tracking-widest text-gray-500">Step 3</p>
+                <p className="mt-2 text-sm text-gray-200">Review the top variants in <span className="font-mono text-teal-400">/qa</span>.</p>
+              </div>
+            </div>
+            <div className="mt-6 inline-flex rounded-md border border-gray-800 bg-gray-950 px-4 py-2 font-mono text-sm text-teal-400 shadow-inner">
+              Run /content in your terminal
+            </div>
+          </div>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 flex-1 items-start">

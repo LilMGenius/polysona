@@ -18,9 +18,13 @@ export default function GapAnalysis({ gaps = [] }: GapAnalysisProps) {
   const gapItems = gaps.join(';').split(';').map(g => g.trim()).filter(Boolean);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4">
       {gapItems.map((item, idx) => {
-        const parts = item.split('↔');
+        const parts = item.includes('↔')
+          ? item.split('↔')
+          : item.includes(' vs ')
+            ? item.split(/\s+vs\s+/i)
+            : [item, 'Unknown Reality'];
         const left = parts[0] || 'Unknown Ideal';
         const right = parts[1] || 'Unknown Reality';
 
@@ -30,17 +34,17 @@ export default function GapAnalysis({ gaps = [] }: GapAnalysisProps) {
               <svg className="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
               <span className="text-xs font-mono font-medium text-amber-400">GAP IDENTIFIED</span>
             </div>
-            <div className="flex flex-col sm:flex-row items-stretch p-3 gap-3">
+            <div className="flex flex-col lg:flex-row items-stretch p-4 gap-3">
               <div className="flex-1 bg-indigo-900/20 rounded p-3 border border-indigo-500/20">
                 <span className="text-[10px] font-mono text-indigo-400 uppercase block mb-1">Conscious / Ideal</span>
-                <p className="text-sm text-gray-200">{left.trim()}</p>
+                <p className="text-sm leading-6 text-gray-200 break-words">{left.trim()}</p>
               </div>
               <div className="flex items-center justify-center shrink-0">
                 <svg className="w-5 h-5 text-amber-500/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
               </div>
               <div className="flex-1 bg-teal-900/20 rounded p-3 border border-teal-500/20">
                 <span className="text-[10px] font-mono text-teal-400 uppercase block mb-1">Unconscious / Reality</span>
-                <p className="text-sm text-gray-200">{right.trim()}</p>
+                <p className="text-sm leading-6 text-gray-200 break-words">{right.trim()}</p>
               </div>
             </div>
           </div>

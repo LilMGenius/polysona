@@ -7,8 +7,9 @@ export interface VoiceMixBarProps {
 export default function VoiceMixBar({ mix = '' }: VoiceMixBarProps) {
   if (!mix) {
     return (
-      <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-sm text-gray-500">
-        No voice mix data available
+      <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4">
+        <p className="text-sm font-medium text-gray-300">Voice mix is not quantified in this persona yet.</p>
+        <p className="mt-2 text-sm text-gray-500">Use the voice and platform tables below as the current tone reference.</p>
       </div>
     );
   }
@@ -27,8 +28,9 @@ export default function VoiceMixBar({ mix = '' }: VoiceMixBarProps) {
 
   if (segments.length === 0) {
     return (
-      <div className="p-4 bg-gray-900/50 border border-gray-800 rounded-lg text-sm text-gray-500">
-        Invalid voice mix format
+      <div className="rounded-lg border border-gray-800 bg-gray-900/50 p-4">
+        <p className="text-sm font-medium text-gray-300">Voice mix could not be visualized.</p>
+        <p className="mt-2 text-sm text-gray-500">The raw voice table is still available below for review.</p>
       </div>
     );
   }
