@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import PloonViewer from '../components/PloonViewer';
+import SelfLayerDiagram from '../components/SelfLayerDiagram';
+import GapAnalysis from '../components/GapAnalysis';
+import FrameworkCoverage from '../components/FrameworkCoverage';
+import VoiceMixBar from '../components/VoiceMixBar';
+import InterviewTimeline from '../components/InterviewTimeline';
 
 export default function PersonaDetail() {
   const { id } = useParams();
-  const [data, setData] = useState<any>(null);
-  const [log, setLog] = useState<any>(null);
+  const [data, setData] = useState<Record<string, unknown> | null>(null);
+  const [log, setLog] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -30,26 +35,72 @@ export default function PersonaDetail() {
 
   const { persona = {}, nuance = {}, accounts = {} } = data;
 
+  const blindGaps = persona.blind?.[0]?.gap 
+    ? [persona.blind[0].gap]
+    : [];
+
   return (
-    <div className="space-y-12 max-w-5xl pb-16">
+    <div className="space-y-12 max-w-5xl mx-auto pb-16">
       <div className="border-b border-gray-800 pb-6 bg-gray-950 sticky top-0 z-10 pt-2">
-        <h2 className="text-3xl font-bold text-gray-100 tracking-tight">{data.name}</h2>
+        <h2 className="text-3xl font-bold text-gray-100 tracking-tight">{data.name || id}</h2>
         <div className="flex items-center gap-3 mt-2">
           <span className="text-xs font-mono uppercase text-gray-500 font-semibold tracking-wider">Persona ID</span>
           <code className="bg-gray-900 px-2 py-0.5 rounded border border-gray-800 text-teal-400 font-mono text-sm">{id}</code>
         </div>
       </div>
 
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="space-y-6">
+          <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
+            <span className="text-teal-400 font-mono text-sm">#</span>
+            Self Layer Model
+          </h3>
+          <div className="bg-gray-900/30 border border-gray-800 p-6 rounded-xl">
+            <SelfLayerDiagram persona={persona} nuance={nuance} accounts={accounts} />
+          </div>
+        </div>
+
+        <div className="space-y-8">
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
+              <span className="text-teal-400 font-mono text-sm">#</span>
+              Gap Analysis
+            </h3>
+            <GapAnalysis gaps={blindGaps} />
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
+              <span className="text-teal-400 font-mono text-sm">#</span>
+              Voice Mix
+            </h3>
+            <div className="bg-gray-900/30 border border-gray-800 p-6 rounded-xl">
+              <VoiceMixBar mix={nuance.voice?.[0]?.mix || ''} />
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
+              <span className="text-teal-400 font-mono text-sm">#</span>
+              Framework Coverage
+            </h3>
+            <div className="bg-gray-900/30 border border-gray-800 p-6 rounded-xl">
+              <FrameworkCoverage interviewLog={log?.interviewLog || []} />
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="space-y-6">
         <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
           <span className="text-teal-400 font-mono text-sm">#</span>
-          Persona <span className="text-gray-500 font-mono text-sm font-normal ml-2">persona.md</span>
+          Raw Persona Data <span className="text-gray-500 font-mono text-sm font-normal ml-2">persona.md</span>
         </h3>
-        <div className="grid gap-6">
-          {persona.core && <PloonViewer data={persona.core.table} tableName="core" />}
-          {persona.decide && <PloonViewer data={persona.decide.table} tableName="decide" />}
-          {persona.energy && <PloonViewer data={persona.energy.table} tableName="energy" />}
-          {persona.blind && <PloonViewer data={persona.blind.table} tableName="blind" />}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {persona.core && <PloonViewer data={persona.core} tableName="core" />}
+          {persona.decide && <PloonViewer data={persona.decide} tableName="decide" />}
+          {persona.energy && <PloonViewer data={persona.energy} tableName="energy" />}
+          {persona.blind && <PloonViewer data={persona.blind} tableName="blind" />}
         </div>
       </div>
 
@@ -58,9 +109,9 @@ export default function PersonaDetail() {
           <span className="text-teal-400 font-mono text-sm">#</span>
           Nuance <span className="text-gray-500 font-mono text-sm font-normal ml-2">nuance.md</span>
         </h3>
-        <div className="grid gap-6">
-          {nuance.voice && <PloonViewer data={nuance.voice.table} tableName="voice" />}
-          {nuance.platform && <PloonViewer data={nuance.platform.table} tableName="platform" />}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {nuance.voice && <PloonViewer data={nuance.voice} tableName="voice" />}
+          {nuance.platform && <PloonViewer data={nuance.platform} tableName="platform" />}
         </div>
       </div>
 
@@ -69,36 +120,20 @@ export default function PersonaDetail() {
           <span className="text-teal-400 font-mono text-sm">#</span>
           Accounts <span className="text-gray-500 font-mono text-sm font-normal ml-2">accounts.md</span>
         </h3>
-        <div className="grid gap-6">
-          {accounts.accounts && <PloonViewer data={accounts.accounts.table} tableName="accounts" />}
-          {accounts.ideal && <PloonViewer data={accounts.ideal.table} tableName="ideal" />}
-          {accounts.rolemodel && <PloonViewer data={accounts.rolemodel.table} tableName="rolemodel" />}
-          {accounts.virtual && <PloonViewer data={accounts.virtual.table} tableName="virtual" />}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {accounts.accounts && <PloonViewer data={accounts.accounts} tableName="accounts" />}
+          {accounts.ideal && <PloonViewer data={accounts.ideal} tableName="ideal" />}
+          {accounts.rolemodel && <PloonViewer data={accounts.rolemodel} tableName="rolemodel" />}
+          {accounts.virtual && <PloonViewer data={accounts.virtual} tableName="virtual" />}
         </div>
       </div>
 
       <div className="space-y-6">
         <h3 className="text-xl font-semibold text-gray-200 flex items-center gap-2">
           <span className="text-teal-400 font-mono text-sm">#</span>
-          Interview Log
+          Interview Timeline
         </h3>
-        {log?.interviewLog?.length > 0 ? (
-          <div className="relative border-l-2 border-gray-800 ml-3 space-y-8 py-2">
-            {log.interviewLog.map((entry: any, i: number) => (
-              <div key={i} className="pl-6 relative">
-                <div className="absolute w-3.5 h-3.5 bg-gray-950 border-2 border-teal-500 rounded-full -left-[8.5px] top-1"></div>
-                <div className="text-xs font-mono text-teal-400 mb-2 font-semibold tracking-widest uppercase">{entry.date}</div>
-                <div className="text-sm text-gray-300 bg-gray-900/80 border border-gray-800 p-4 rounded-lg leading-relaxed shadow-sm hover:border-gray-700 transition-colors">
-                  {entry.content}
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-gray-500 text-sm bg-gray-900/50 p-6 rounded-lg border border-dashed border-gray-800 text-center">
-            No interview logs available.
-          </div>
-        )}
+        <InterviewTimeline entries={log?.interviewLog || []} />
       </div>
     </div>
   );

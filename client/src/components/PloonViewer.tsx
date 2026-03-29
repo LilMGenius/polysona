@@ -1,5 +1,5 @@
-export default function PloonViewer({ data, tableName }: { data: any, tableName: string }) {
-  if (!data || data.length === 0) {
+export default function PloonViewer({ data, tableName }: { data: Record<string, unknown> | Record<string, unknown>[], tableName: string }) {
+  if (!data || (Array.isArray(data) && data.length === 0)) {
     return (
       <div className="p-4 bg-gray-900 border border-gray-800 rounded-lg text-gray-500 text-sm">
         No data for {tableName}
