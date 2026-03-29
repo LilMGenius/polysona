@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Solution</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #07111d;
+      --surface: rgba(11, 24, 39, 0.8);
+      --surface-2: rgba(19, 38, 59, 0.7);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --accent-soft: #9be7ff;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 50% 0%, rgba(67,199,255,0.16), transparent 24%),
+        linear-gradient(180deg, #08121f 0%, #05101a 100%);
+      color: var(--text);
+      padding: 24pt 26pt 20pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 22pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      max-width: 580pt;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    .definition {
+      margin-bottom: 12pt;
+      font-size: 11pt;
+      color: var(--accent-soft);
+      line-height: 1.45;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8pt;
+      margin-bottom: 14pt;
+      position: relative;
+    }
+    .step {
+      border-radius: 20pt;
+      background: linear-gradient(180deg, rgba(14,27,44,0.86), rgba(10,22,36,0.96));
+      border: 1px solid var(--border);
+      padding: 14pt 12pt;
+      min-height: 164pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .step p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 8pt;
+    }
+    .step h2 {
+      font-size: 14pt;
+      line-height: 1.2;
+      letter-spacing: -0.035em;
+      margin-bottom: 10pt;
+      padding-bottom: 2pt;
+    }
+    .step ul {
+      display: grid;
+      gap: 6pt;
+    }
+    .step li {
+      list-style: none;
+      font-size: 9.6pt;
+      line-height: 1.45;
+      color: #d8eafb;
+      position: relative;
+      padding-left: 9pt;
+    }
+    .step li::before {
+      content: "";
+      width: 4pt;
+      height: 4pt;
+      border-radius: 50%;
+      background: var(--accent);
+      position: absolute;
+      left: 0;
+      top: 6pt;
+    }
+    .footer-band {
+      border-radius: 18pt;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.08);
+      padding: 10pt 12pt;
+      display: flex;
+      justify-content: space-between;
+      gap: 16pt;
+      align-items: center;
+    }
+    .footer-band p {
+      font-size: 9pt;
+      line-height: 1.4;
+      color: #d7e8fb;
+    }
+    .footer-band strong { color: var(--accent-soft); }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Solution</p>
+      <h1>A multi-persona operating system built on a psychological agent harness</h1>
+    </div>
+    <p class="page">04</p>
+  </header>
+
+  <p class="definition">Polysona structures a person through interview and metacognition, then runs a multi-persona content loop that stays faithful to that person.</p>
+
+  <main class="flow">
+    <article class="step">
+      <div>
+        <p>01 Interview</p>
+        <h2>Ask who I am</h2>
+      </div>
+      <ul>
+        <li>10-framework interview process</li>
+        <li>Collect psychological and philosophical signals</li>
+        <li>Separate surface intent from deeper patterns</li>
+      </ul>
+    </article>
+    <article class="step">
+      <div>
+        <p>02 Structuring</p>
+        <h2>Systemize me</h2>
+      </div>
+      <ul>
+        <li>Generate persona.md, nuance.md, and accounts.md</li>
+        <li>Manage multiple masks by situation</li>
+        <li>Use a persona harness instead of generic prompts</li>
+      </ul>
+    </article>
+    <article class="step">
+      <div>
+        <p>03 Generation</p>
+        <h2>Create the most accurate "me"</h2>
+      </div>
+      <ul>
+        <li>Generate platform-native drafts automatically</li>
+        <li>Reflect tone, role, and point of view</li>
+        <li>Run across any AI agent</li>
+      </ul>
+    </article>
+    <article class="step">
+      <div>
+        <p>04 QA Loop</p>
+        <h2>Validate with virtual followers</h2>
+      </div>
+      <ul>
+        <li>Simulate audience reaction before posting</li>
+        <li>Recommend top draft directions after QA</li>
+        <li>Connect to publishing and feedback loops</li>
+      </ul>
+    </article>
+  </main>
+
+  <section class="footer-band">
+    <p><strong>MVP demo:</strong> interview -> persona structuring -> content generation -> QA</p>
+    <p><strong>Promise:</strong> not "adding AI", but making a person operable as a system</p>
+  </section>
+</body>
+</html>

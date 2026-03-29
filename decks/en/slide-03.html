@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Evidence</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #07111d;
+      --surface: rgba(12, 26, 44, 0.8);
+      --surface-2: rgba(18, 37, 59, 0.72);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --mint: #5ef2c5;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 8% 12%, rgba(67,199,255,0.17), transparent 26%),
+        radial-gradient(circle at 88% 86%, rgba(94,242,197,0.15), transparent 26%),
+        linear-gradient(180deg, #09131f 0%, #05101a 100%);
+      color: var(--text);
+      padding: 24pt 28pt 20pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 22pt;
+      line-height: 1.16;
+      letter-spacing: -0.045em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 0.84fr 1.16fr;
+      gap: 16pt;
+      height: 276pt;
+    }
+    .hero-stat {
+      border-radius: 24pt;
+      background: linear-gradient(180deg, rgba(10,23,38,0.88), rgba(8,19,31,0.96));
+      border: 1px solid var(--border);
+      padding: 18pt 16pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hero-stat p:first-child {
+      font-size: 9pt;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+    .hero-stat h2 {
+      font-size: 72pt;
+      line-height: 1.08;
+      letter-spacing: -0.07em;
+      color: var(--mint);
+      margin: 10pt 0 8pt;
+      padding-bottom: 4pt;
+    }
+    .hero-stat p:nth-child(3) {
+      font-size: 11pt;
+      line-height: 1.45;
+      color: var(--text);
+    }
+    .hero-stat p:last-child {
+      font-size: 9pt;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+    .proofs {
+      display: grid;
+      grid-template-rows: 1fr 1fr;
+      gap: 12pt;
+    }
+    .proof-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12pt;
+    }
+    .card {
+      border-radius: 20pt;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 13pt 14pt;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8pt;
+    }
+    .card h3 {
+      font-size: 15pt;
+      line-height: 1.18;
+      letter-spacing: -0.03em;
+      margin-bottom: 8pt;
+      padding-bottom: 2pt;
+    }
+    .card p:last-child, .buyers li {
+      font-size: 9.2pt;
+      line-height: 1.42;
+      color: #d7e9fb;
+    }
+    .buyers {
+      border-radius: 20pt;
+      background: var(--surface-2);
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 13pt;
+    }
+    .buyers p {
+      font-size: 8.5pt;
+      color: var(--mint);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 10pt;
+    }
+    .buyers ul {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10pt;
+    }
+    .buyers li {
+      list-style: none;
+      padding-top: 6pt;
+      border-top: 2pt solid rgba(94,242,197,0.45);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Evidence</p>
+      <h1>This problem turns directly into response and revenue</h1>
+    </div>
+    <p class="page">03</p>
+  </header>
+
+  <main>
+    <section class="hero-stat">
+      <div>
+        <p>Signal From Reality</p>
+        <h2>+50</h2>
+        <p>A single reply in my natural tone increased followers.</p>
+      </div>
+      <p>That one response became the direct trigger for building an agent that could operate my persona for me.</p>
+    </section>
+
+    <section class="proofs">
+      <div class="proof-grid">
+        <article class="card">
+          <p>Creator Story</p>
+          <h3>It started with reply automation</h3>
+          <p>I built an agent that could reply for me, then wanted a system that could handle multiple masks by context.</p>
+        </article>
+        <article class="card">
+          <p>Buyer Intent</p>
+          <h3>Customers were already asking price</h3>
+          <p>AX consulting clients wanted AI influencer automation and made explicit buying signals.</p>
+        </article>
+      </div>
+      <section class="buyers">
+        <p>Demand Came From</p>
+        <ul>
+          <li>Beauty brand teams</li>
+          <li>Fashion and F&amp;B marketers</li>
+          <li>Content agencies and AX clients</li>
+        </ul>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

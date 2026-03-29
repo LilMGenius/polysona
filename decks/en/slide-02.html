@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Problem</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #07111c;
+      --surface: rgba(15, 27, 44, 0.72);
+      --surface-2: rgba(14, 33, 53, 0.58);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --border: rgba(155, 231, 255, 0.16);
+      --danger: #ff8e70;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 12% 10%, rgba(67,199,255,0.16), transparent 28%),
+        radial-gradient(circle at 88% 18%, rgba(99,102,241,0.16), transparent 24%),
+        linear-gradient(180deg, #08121f 0%, #06101a 100%);
+      color: var(--text);
+      padding: 24pt 28pt 18pt;
+    }
+    header, footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header { margin-bottom: 18pt; }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 26pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1.12fr 0.88fr;
+      gap: 18pt;
+      height: 276pt;
+    }
+    .statement {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20pt;
+      border-radius: 24pt;
+      background: linear-gradient(180deg, rgba(14,28,47,0.88), rgba(10,21,35,0.92));
+      border: 1px solid var(--border);
+    }
+    .statement h2 {
+      font-size: 32pt;
+      line-height: 1.14;
+      letter-spacing: -0.055em;
+      margin-bottom: 12pt;
+      max-width: 330pt;
+      padding-bottom: 3pt;
+    }
+    .statement h2 strong { color: var(--accent); }
+    .statement p {
+      font-size: 12pt;
+      line-height: 1.6;
+      color: #d9eaff;
+      max-width: 330pt;
+    }
+    .pain-bars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10pt;
+    }
+    .pain-bars li {
+      list-style: none;
+      border-top: 3pt solid var(--danger);
+      padding-top: 8pt;
+      font-size: 9pt;
+      color: var(--muted);
+    }
+    .pain-bars strong {
+      display: block;
+      color: var(--text);
+      font-size: 12.5pt;
+      margin-bottom: 4pt;
+    }
+    .details {
+      display: grid;
+      gap: 10pt;
+    }
+    .detail {
+      border-radius: 20pt;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 14pt 16pt;
+    }
+    .detail p:first-child {
+      font-size: 8.5pt;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      margin-bottom: 7pt;
+    }
+    .detail p:last-child {
+      font-size: 11pt;
+      line-height: 1.48;
+      color: var(--text);
+    }
+    .quote {
+      background: var(--surface-2);
+      border-radius: 18pt;
+      padding: 14pt 16pt;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .quote p {
+      font-size: 11pt;
+      line-height: 1.6;
+      color: #d3e5fb;
+    }
+    footer {
+      margin-top: 8pt;
+      padding-top: 8pt;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    footer p {
+      font-size: 8.5pt;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Problem</p>
+      <h1>Agents work, but they do not know "me"</h1>
+    </div>
+    <p class="page">02</p>
+  </header>
+
+  <main>
+    <section class="statement">
+      <div>
+        <h2>generic AI makes you lose your <strong>voice</strong></h2>
+        <p>Existing agent stacks process context, but they do not reproduce the speaker's psychology, tone, masks, or relationship context.</p>
+      </div>
+      <ul class="pain-bars">
+        <li><strong>Docs exist</strong>Even well-written identity docs get ignored in real execution.</li>
+        <li><strong>Always active</strong>This repeats across posts, comments, replies, and operating decisions.</li>
+        <li><strong>Result</strong>Your persona gets flattened and account quality starts to drift.</li>
+      </ul>
+    </section>
+
+    <section class="details">
+      <article class="detail">
+        <p>Target</p>
+        <p>Individuals and agencies that want to run multiple AI influencer accounts across platforms</p>
+      </article>
+      <article class="detail">
+        <p>Broken State</p>
+        <p>OpenClaw, oh-my-* style tools, and generic stacks still behave more like assistants than "me"</p>
+      </article>
+      <article class="quote">
+        <p>"Even with good docs, the agent still consumes me as a flat profile."</p>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    <p>Core gap: context automation exists, but self-projection automation does not.</p>
+  </footer>
+</body>
+</html>

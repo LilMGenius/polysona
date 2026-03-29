@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polysona - Ralph Setup</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+  <style>
+    :root {
+      --bg: #06101b;
+      --surface: rgba(12, 24, 39, 0.82);
+      --surface-2: rgba(18, 36, 57, 0.72);
+      --text: #eef7ff;
+      --muted: #8ea3bf;
+      --accent: #43c7ff;
+      --mint: #5ef2c5;
+      --border: rgba(155, 231, 255, 0.16);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 720pt;
+      height: 405pt;
+      overflow: hidden;
+      font-family: 'Pretendard', sans-serif;
+      background:
+        radial-gradient(circle at 80% 0%, rgba(67,199,255,0.18), transparent 24%),
+        radial-gradient(circle at 10% 100%, rgba(94,242,197,0.14), transparent 28%),
+        linear-gradient(180deg, #08121e 0%, #051019 100%);
+      color: var(--text);
+      padding: 24pt 26pt 18pt;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      margin-bottom: 16pt;
+    }
+    .eyebrow {
+      font-size: 9pt;
+      color: var(--accent);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 6pt;
+    }
+    h1 {
+      font-size: 24pt;
+      line-height: 1.16;
+      letter-spacing: -0.04em;
+      padding-bottom: 3pt;
+    }
+    .page {
+      font-size: 10pt;
+      color: var(--muted);
+      font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    }
+    main {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12pt;
+      height: 218pt;
+    }
+    .panel {
+      border-radius: 22pt;
+      background: linear-gradient(180deg, rgba(12,25,41,0.84), rgba(8,19,31,0.95));
+      border: 1px solid var(--border);
+      padding: 14pt 14pt 12pt;
+      height: 100%;
+    }
+    .panel p:first-child {
+      font-size: 8.5pt;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-bottom: 10pt;
+    }
+    .panel h2 {
+      font-size: 16pt;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 10pt;
+    }
+    .stack, .points {
+      display: grid;
+      gap: 6pt;
+    }
+    .stack li, .points li {
+      list-style: none;
+      border-radius: 16pt;
+      background: var(--surface-2);
+      padding: 8pt 9pt;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .stack strong, .points strong {
+      display: block;
+      font-size: 10pt;
+      color: var(--text);
+      margin-bottom: 3pt;
+    }
+    .stack span, .points span {
+      font-size: 9.2pt;
+      line-height: 1.35;
+      color: #d7e8fb;
+    }
+    .status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-radius: 18pt;
+      background: rgba(94,242,197,0.08);
+      border: 1px solid rgba(94,242,197,0.25);
+      padding: 7pt 9pt;
+    }
+    .status p:first-child {
+      font-size: 8.5pt;
+      color: var(--mint);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 4pt;
+    }
+    .status p:last-child {
+      font-size: 9pt;
+      color: var(--text);
+    }
+    .status strong {
+      font-size: 16pt;
+      color: var(--mint);
+      letter-spacing: -0.05em;
+    }
+    .panel .status {
+      margin-top: 10pt;
+    }
+    footer {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <p class="eyebrow">Ralph Setup / Progress</p>
+      <h1>Ralph capability = multi-agent operating ability</h1>
+    </div>
+    <p class="page">05</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <p>Operating Stack</p>
+      <h2>Not just using agents,<br>but designing the loop</h2>
+      <ul class="stack">
+        <li><strong>Core tools</strong><span>oh-my-openagent, Codex, Claude Code</span></li>
+        <li><strong>Loop discipline</strong><span>ralph-loop with ulw keeps repetition and improvement alive</span></li>
+        <li><strong>Product stance</strong><span>We directly design a persona-aware agent harness</span></li>
+      </ul>
+    </section>
+
+    <section class="panel">
+      <p>Execution Signal</p>
+      <h2>It already runs now,<br>and demand is being validated in parallel</h2>
+      <ul class="points">
+        <li><strong>MVP running</strong><span>The core loop already works</span></li>
+        <li><strong>Real demand</strong><span>Customers have shown demand and pricing sensitivity</span></li>
+        <li><strong>Why us</strong><span>The operating method itself is part of the advantage</span></li>
+      </ul>
+      <section class="status">
+        <div>
+          <p>Current Status</p>
+          <p>MVP live + validation in progress</p>
+        </div>
+        <strong>LIVE</strong>
+      </section>
+    </section>
+  </main>
+</body>
+</html>
