@@ -3,6 +3,8 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import PersonaDetail from './pages/PersonaDetail';
 import ContentPipeline from './pages/ContentPipeline';
+import VirtualFollower from './pages/VirtualFollower';
+import AgentMonitor from './pages/AgentMonitor';
 
 export default function App() {
   return (
@@ -12,6 +14,8 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/personas/:id" element={<PersonaDetail />} />
           <Route path="/content" element={<ContentPipeline />} />
+          <Route path="/qa" element={<VirtualFollower />} />
+          <Route path="/agents" element={<AgentMonitor />} />
         </Routes>
       </Layout>
     </BrowserRouter>

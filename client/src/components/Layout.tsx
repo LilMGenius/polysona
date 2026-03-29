@@ -7,6 +7,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     { name: 'Home', path: '/' },
     { name: 'Personas', path: '/personas' },
     { name: 'Content', path: '/content' },
+    { name: 'QA', path: '/qa' },
+    { name: 'Agents', path: '/agents' },
   ];
 
   return (
