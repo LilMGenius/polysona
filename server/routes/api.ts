@@ -60,8 +60,8 @@ const readPloonFile = async (path: string) => {
   return (await file.exists()) ? parsePloon(await file.text()) : null
 }
 
-function deterministicScore(personaId: string, followerId: string, dimension: string): number {
-  const seed = `${personaId}-${followerId}-${dimension}`
+function deterministicScore(personaId: string, followerId: string, dimension: string, contentName = ''): number {
+  const seed = `${personaId}-${followerId}-${dimension}-${contentName}`
   let hash = 0
   for (let i = 0; i < seed.length; i++) {
     hash = ((hash << 5) - hash) + seed.charCodeAt(i)
@@ -129,6 +129,7 @@ apiRoutes.get('/content/published', async (c) => c.json(await listContentFiles(p
 
 apiRoutes.get('/personas/:id/qa-simulation', async (c) => {
   const id = c.req.param('id')
+  const contentName = c.req.query('content') ?? ''
   const [persona, nuance, accounts] = await Promise.all([
     readPloonFile(`${personasDir}/${id}/persona.md`),
     readPloonFile(`${personasDir}/${id}/nuance.md`),
@@ -141,11 +142,11 @@ apiRoutes.get('/personas/:id/qa-simulation', async (c) => {
 
   const followers = FOLLOWER_ARCHETYPES.map((archetype) => {
     const scores = {
-      hook: deterministicScore(id, archetype.id, 'hook'),
-      empathy: deterministicScore(id, archetype.id, 'empathy'),
-      share: deterministicScore(id, archetype.id, 'share'),
-      cta: deterministicScore(id, archetype.id, 'cta'),
-      platform_fit: deterministicScore(id, archetype.id, 'platform_fit'),
+      hook: deterministicScore(id, archetype.id, 'hook', contentName),
+      empathy: deterministicScore(id, archetype.id, 'empathy', contentName),
+      share: deterministicScore(id, archetype.id, 'share', contentName),
+      cta: deterministicScore(id, archetype.id, 'cta', contentName),
+      platform_fit: deterministicScore(id, archetype.id, 'platform_fit', contentName),
     }
     const total = Object.values(scores).reduce((sum, score) => sum + score, 0)
 
@@ -160,6 +161,7 @@ apiRoutes.get('/personas/:id/qa-simulation', async (c) => {
 
   return c.json({
     personaId: id,
+    contentName,
     followers: rankedFollowers,
     top5: rankedFollowers.slice(0, 5),
     generatedAt: new Date().toISOString(),

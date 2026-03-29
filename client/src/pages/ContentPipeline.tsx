@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import ContentQualityMeter from '../components/ContentQualityMeter';
 
+const qaPathForFile = (filename: string) => `/qa?content=${encodeURIComponent(filename)}`;
+
 export default function ContentPipeline() {
   const [drafts, setDrafts] = useState<string[]>([]);
   const [published, setPublished] = useState<string[]>([]);
@@ -70,7 +72,7 @@ export default function ContentPipeline() {
             {platform}
           </span>
           <div className="flex items-center gap-3">
-            <Link to="/qa" className="text-xs text-indigo-400 hover:text-indigo-300 font-mono underline decoration-indigo-400/30 underline-offset-4 hidden sm:block">
+            <Link to={qaPathForFile(filename)} className="text-xs text-indigo-400 hover:text-indigo-300 font-mono underline decoration-indigo-400/30 underline-offset-4 hidden sm:block">
               View QA
             </Link>
             <span className={`text-xs font-medium uppercase tracking-wider flex items-center gap-1.5 ${isPublished ? 'text-green-400' : 'text-yellow-400'}`}>
@@ -89,7 +91,7 @@ export default function ContentPipeline() {
         </div>
         
         <div className="sm:hidden mt-2 pt-3 border-t border-gray-800">
-          <Link to="/qa" className="text-xs text-indigo-400 font-mono underline decoration-indigo-400/30 underline-offset-4">
+          <Link to={qaPathForFile(filename)} className="text-xs text-indigo-400 font-mono underline decoration-indigo-400/30 underline-offset-4">
             View QA Details →
           </Link>
         </div>
