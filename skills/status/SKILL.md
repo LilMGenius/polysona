@@ -3,7 +3,7 @@ name: status
 description: Show current persona health and content pipeline status
 ---
 
-!`ls personas/ 2>/dev/null && echo "---" && cat personas/default/persona.md 2>/dev/null && echo "---" && cat personas/default/nuance.md 2>/dev/null && echo "---" && cat personas/default/accounts.md 2>/dev/null && echo "---" && ls content/trends/ 2>/dev/null | wc -l && echo "trend files" && echo "---" && ls content/drafts/ 2>/dev/null | wc -l && echo "draft files" && echo "---" && ls content/published/ 2>/dev/null | wc -l && echo "published files"`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); ls personas/ 2>/dev/null && echo "---" && cat "personas/$ACTIVE/persona.md" 2>/dev/null && echo "---" && cat "personas/$ACTIVE/nuance.md" 2>/dev/null && echo "---" && cat "personas/$ACTIVE/accounts.md" 2>/dev/null && echo "---" && ls content/trends/ 2>/dev/null | wc -l && echo "trend files" && echo "---" && ls content/drafts/ 2>/dev/null | wc -l && echo "draft files" && echo "---" && ls content/published/ 2>/dev/null | wc -l && echo "published files"`
 
 # Status Skill Protocol
 

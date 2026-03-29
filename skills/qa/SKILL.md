@@ -5,7 +5,7 @@ context: fork
 agent: virtual-follower
 ---
 
-!`cat personas/default/accounts.md 2>/dev/null || echo "No accounts. Run /interview first."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/accounts.md" 2>/dev/null || echo "No accounts. Run /interview first."`
 
 # QA Skill Protocol
 

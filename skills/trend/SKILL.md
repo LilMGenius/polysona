@@ -4,7 +4,7 @@ description: Scan trending topics in your domains and get content recommendation
 agent: trendsetter
 ---
 
-!`cat personas/default/persona.md 2>/dev/null || echo "No persona. Run /interview first."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/persona.md" 2>/dev/null || echo "No persona. Run /interview first."`
 
 # Trend Skill Protocol
 

@@ -24,7 +24,7 @@ tools:
 7. If the write fails, say it failed. Do not pretend trend storage succeeded.
 
 ## Persona Context Preload
-!`cat personas/default/persona.md 2>/dev/null && cat personas/default/accounts.md 2>/dev/null || echo "No persona/accounts found. Run /interview first."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/persona.md" 2>/dev/null && cat "personas/$ACTIVE/accounts.md" 2>/dev/null || echo "No persona/accounts found. Run /interview first."`
 
 ## Data Sources
 - X trending topics and active quote-RT conversations.

@@ -3,7 +3,7 @@ name: introduce
 description: Inject your persona into the current session
 ---
 
-!`cat personas/default/persona.md 2>/dev/null && cat personas/default/nuance.md 2>/dev/null || echo "No persona found. Run /interview first."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/persona.md" 2>/dev/null && cat "personas/$ACTIVE/nuance.md" 2>/dev/null || echo "No persona found. Run /interview first."`
 
 # Introduce Skill Protocol
 

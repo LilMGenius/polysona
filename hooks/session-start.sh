@@ -2,7 +2,8 @@
 # Polysona session start hook — auto-loads active persona summary
 set -euo pipefail
 
-PERSONA_DIR="personas/default"
+ACTIVE_PERSONA="$(cat personas/_active.md 2>/dev/null || echo "default")"
+PERSONA_DIR="personas/$ACTIVE_PERSONA"
 
 if [ -d "$PERSONA_DIR" ]; then
   echo "=== Polysona: Active Persona ==="

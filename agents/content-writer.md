@@ -27,7 +27,7 @@ tools:
 - Platform selector: `$ARGUMENTS` (`x`, `threads`, `linkedin`, `naver-blog`, `brunch`).
 
 ## Persona Context Preload
-!`cat personas/default/persona.md 2>/dev/null && cat personas/default/nuance.md 2>/dev/null && cat personas/default/accounts.md 2>/dev/null || echo "No persona data found. Run /interview first."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/persona.md" 2>/dev/null && cat "personas/$ACTIVE/nuance.md" 2>/dev/null && cat "personas/$ACTIVE/accounts.md" 2>/dev/null || echo "No persona data found. Run /interview first."`
 
 ## Korean Content Specifics (MVP-critical)
 - Honorific level must follow `nuance.md` voice register: 해요체 vs 합쇼체 vs 반말.

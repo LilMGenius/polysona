@@ -4,7 +4,7 @@ description: Generate platform-specific content drafts conditioned on your perso
 agent: content-writer
 ---
 
-!`cat personas/default/persona.md 2>/dev/null && cat personas/default/nuance.md 2>/dev/null && cat personas/default/accounts.md 2>/dev/null || echo "No persona. Run /interview first."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/persona.md" 2>/dev/null && cat "personas/$ACTIVE/nuance.md" 2>/dev/null && cat "personas/$ACTIVE/accounts.md" 2>/dev/null || echo "No persona. Run /interview first."`
 
 # Content Skill Protocol
 

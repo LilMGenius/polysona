@@ -4,7 +4,7 @@ description: Start a deep psychology-based interview to extract your persona usi
 agent: profiler
 ---
 
-!`cat personas/default/persona.md 2>/dev/null || echo "No persona found. Starting fresh interview."`
+!`ACTIVE=$(cat personas/_active.md 2>/dev/null || echo "default"); cat "personas/$ACTIVE/persona.md" 2>/dev/null || echo "No persona found. Starting fresh interview."`
 
 # Interview Skill Protocol
 
@@ -12,7 +12,7 @@ agent: profiler
 Start or continue a deep psychology-based interview that extracts evidence across 10 frameworks and appends results to `persona.md` interview-log.
 
 ## Interview Start Protocol (resume-first)
-1. Try loading `personas/default/persona.md`.
+1. Try loading `personas/{active}/persona.md`, where `active` comes from `personas/_active.md` and falls back to `default`.
 2. If file exists:
    - Find `## interview-log`.
    - Read the latest interview-log lines.
