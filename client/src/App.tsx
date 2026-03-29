@@ -12,6 +12,7 @@ export default function App() {
       <Layout>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/personas" element={<Navigate to="/" replace />} />
           <Route path="/personas/:id" element={<PersonaDetail />} />
           <Route path="/content" element={<ContentPipeline />} />
           <Route path="/qa" element={<VirtualFollower />} />

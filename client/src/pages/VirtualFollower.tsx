@@ -11,7 +11,7 @@ export default function VirtualFollower() {
     fetch('/api/personas')
       .then(r => r.json())
       .then(data => {
-        const pList = data?.personas || [];
+        const pList = Array.isArray(data) ? data : [];
         setPersonas(pList);
         if (pList.length > 0) {
           setSelectedPersona(pList[0].id);

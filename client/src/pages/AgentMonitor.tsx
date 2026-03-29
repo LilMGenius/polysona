@@ -9,8 +9,8 @@ export default function AgentMonitor() {
     fetch('/api/agents/status')
       .then(r => r.json())
       .then(data => {
-        if (data?.agents) {
-          setAgents(data.agents);
+        if (Array.isArray(data)) {
+          setAgents(data);
         } else {
           setAgents([]);
         }
