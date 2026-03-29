@@ -72,6 +72,13 @@ gstack gives you Garry Tan's brain. **polysona gives you yours.**
 ```bash
 # Codex (primary)
 # AGENTS.md is auto-recognized by Codex
+# Codex auto-discovers repo skills from .agents/skills
+# This repo already mirrors ./skills into ./.agents/skills
+# If you edit ./skills later, resync with:
+node ./scripts/sync-codex-skills.mjs
+# or:
+bun run codex:skills:sync
+# Then restart Codex if the updated skill does not appear immediately
 # Use $interview, $introduce, $trend, $content x, $qa, $publish, $status, $export in your Codex session
 
 # Claude Code

@@ -31,6 +31,8 @@
 ## Quick Start (Codex)
 
 - `AGENTS.md` is auto-recognized by Codex-compatible workflows.
+- Codex auto-discovers repo skills from `.agents/skills`. This repo mirrors `skills/` there for Codex compatibility.
+- After editing `skills/`, resync with `node ./scripts/sync-codex-skills.mjs` or `bun run codex:skills:sync`.
 - Use `$interview`, `$introduce`, `$trend`, `$content [platform]`, `$qa`, `$publish`, `$status`, `$export`.
 - Keep persona data in `personas/{id}/` using PLOON format.
 

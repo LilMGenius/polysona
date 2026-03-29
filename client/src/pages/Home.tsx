@@ -42,7 +42,7 @@ export default function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="bg-gray-900 border border-gray-800 p-6 rounded-xl flex flex-col">
           <span className="text-gray-500 font-mono text-xs uppercase mb-2 tracking-widest">Version</span>
-          <span className="text-2xl font-bold text-teal-400 font-mono">{status?.version || '1.2.1'}</span>
+          <span className="text-2xl font-bold text-teal-400 font-mono">{status?.version || '1.3.0'}</span>
         </div>
         <div className="bg-gray-900 border border-gray-800 p-6 rounded-xl flex flex-col">
           <span className="text-gray-500 font-mono text-xs uppercase mb-2 tracking-widest">Workspace</span>

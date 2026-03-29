@@ -72,7 +72,14 @@ gstack은 개리 탄(Garry Tan)의 뇌를 줍니다. **polysona는 당신의 뇌
 ```bash
 # Codex (primary)
 # AGENTS.md is auto-recognized by Codex
-# Use $interview, $trend, $content x, $qa, $publish, $status, $export in your Codex session
+# Codex는 repo의 .agents/skills 를 자동 탐지합니다
+# 이 repo는 ./skills 를 ./.agents/skills 로 미러링해 둡니다
+# 이후 ./skills 를 수정했다면 아래로 다시 동기화:
+node ./scripts/sync-codex-skills.mjs
+# 또는:
+bun run codex:skills:sync
+# 변경된 스킬이 바로 안 보이면 Codex 재시작
+# 이후 $interview, $introduce, $trend, $content x, $qa, $publish, $status, $export 사용
 
 # Claude Code
 # 1. 로컬 마켓플레이스 추가

@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "codex:skills:sync": "node ./scripts/sync-codex-skills.mjs",
     "dev": "bun run build && bun run server/index.ts",
     "build": "vite build",
     "preview": "vite preview"

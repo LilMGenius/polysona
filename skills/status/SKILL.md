@@ -18,6 +18,7 @@ Display a quick system status snapshot:
 - Do not invent psychology frameworks, audience segments, or pipeline components that are not explicitly present.
 - If framework coverage is partial, list only the exact framework names that appear in `interview-log`.
 - If the missing frameworks are not explicitly named in the files, report only the missing count.
+- Do not infer the category or identity of missing frameworks from the global project spec.
 - Treat GAP or summary rows as log entries, not as substitute names for missing psychology frameworks.
 - If a section is missing, say it is missing instead of inferring completion.
 - Prefer exact counts from `content/trends/`, `content/drafts/`, `content/qa/`, and `content/published/` over assumptions.
