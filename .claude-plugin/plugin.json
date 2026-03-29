@@ -1,6 +1,6 @@
 {
   "name": "polysona",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Build and run multiple personas across any AI agent.",
   "skills": [
     "skills/interview/SKILL.md",

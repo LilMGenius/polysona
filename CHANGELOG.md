@@ -2,6 +2,15 @@
 
 All notable changes to Polysona are documented here.
 
+## [1.2.0] — 2026-03-29
+
+### Added
+- Local-first fullstack dashboard (Hono server + HTML client)
+- Persona list API: GET /api/personas
+- Status API: GET /api/status
+- Dashboard UI with teal/indigo brand palette
+- bun run dev for one-command local server
+
 ## [1.1.0] — 2026-03-29
 
 ### Added

@@ -89,6 +89,20 @@ claude plugin install polysona
 | **virtual-follower** | QA simulator | `$qa` / `/qa` |
 | **admin** | Publisher and tracker | `$publish` / `/publish` |
 
+## Dashboard
+
+Run the local-first dashboard to visualize your personas and content pipeline:
+
+```bash
+bun run dev
+# Open http://localhost:3000
+```
+
+Features:
+- Persona list from `personas/` directory
+- System status and version
+- Quick start commands reference
+
 <!-- demo screenshots will be added -->
 
 ## Roadmap
