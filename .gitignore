@@ -147,6 +147,16 @@ personas/*/
 .ref/
 .sisyphus/
 
+# Local tooling
+.claude/
+.bun/
+
+# Generated content drafts
+content/drafts/*
+content/published/*
+!content/drafts/.gitkeep
+!content/published/.gitkeep
+
 # OS
 .DS_Store
 Thumbs.db

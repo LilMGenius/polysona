@@ -31,8 +31,8 @@ export function parsePloon(content: string): Record<string, unknown> {
       continue
     }
 
-    if (table && /^\d+\|/.test(line)) {
-      const values = line.split('|').slice(1)
+    if (table && /^[^|]+\|/.test(line)) {
+      const values = line.replace(/^\||\|$/g, '').split('|')
       list<Record<string, string>>(table).push(
         Object.fromEntries(columns.map((column, index) => [column, values[index]?.trim() ?? ''])),
       )

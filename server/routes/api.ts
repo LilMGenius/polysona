@@ -5,10 +5,41 @@ import { Hono } from 'hono'
 import { parsePloon } from '../lib/ploon'
 
 const apiRoutes = new Hono()
-const version = '1.2.0'
+const version = '1.2.1'
 const personasDir = './personas'
 const draftsDir = './content/drafts'
 const publishedDir = './content/published'
+
+const FOLLOWER_ARCHETYPES = [
+  { id: 'f01', label: '20s female office worker', age: 24, gender: 'F', occupation: 'office' },
+  { id: 'f02', label: '30s male developer', age: 32, gender: 'M', occupation: 'dev' },
+  { id: 'f03', label: '40s self-employed', age: 43, gender: 'M', occupation: 'self' },
+  { id: 'f04', label: 'startup founder', age: 29, gender: 'M', occupation: 'founder' },
+  { id: 'f05', label: 'general follower', age: 27, gender: 'F', occupation: 'general' },
+  { id: 'f06', label: '20s male student', age: 21, gender: 'M', occupation: 'student' },
+  { id: 'f07', label: '30s female marketer', age: 35, gender: 'F', occupation: 'marketing' },
+  { id: 'f08', label: '40s male executive', age: 47, gender: 'M', occupation: 'executive' },
+  { id: 'f09', label: '20s female creator', age: 23, gender: 'F', occupation: 'creator' },
+  { id: 'f10', label: '30s male engineer', age: 31, gender: 'M', occupation: 'engineer' },
+  { id: 'f11', label: '50s female entrepreneur', age: 52, gender: 'F', occupation: 'entrepreneur' },
+  { id: 'f12', label: '20s non-binary designer', age: 26, gender: 'NB', occupation: 'design' },
+  { id: 'f13', label: '30s male product manager', age: 34, gender: 'M', occupation: 'pm' },
+  { id: 'f14', label: '40s female educator', age: 41, gender: 'F', occupation: 'education' },
+  { id: 'f15', label: '20s male gamer', age: 22, gender: 'M', occupation: 'gaming' },
+  { id: 'f16', label: '30s female researcher', age: 33, gender: 'F', occupation: 'research' },
+  { id: 'f17', label: '40s male consultant', age: 44, gender: 'M', occupation: 'consulting' },
+  { id: 'f18', label: '20s female influencer', age: 25, gender: 'F', occupation: 'influencer' },
+  { id: 'f19', label: '30s male journalist', age: 37, gender: 'M', occupation: 'media' },
+  { id: 'f20', label: '50s male investor', age: 55, gender: 'M', occupation: 'investor' },
+] as const
+
+const AGENT_DEFINITIONS = [
+  { name: 'profiler', description: 'Deep psychology interviewer', skillFile: 'skills/interview/SKILL.md', badge: '10 frameworks' },
+  { name: 'trendsetter', description: 'Trend detector', skillFile: 'skills/trend/SKILL.md', badge: 'WebSearch' },
+  { name: 'content-writer', description: 'Platform content generator', skillFile: 'skills/content/SKILL.md', badge: '5 platforms' },
+  { name: 'virtual-follower', description: 'QA simulator', skillFile: 'skills/qa/SKILL.md', badge: 'context: fork' },
+  { name: 'admin', description: 'Publisher and tracker', skillFile: 'skills/publish/SKILL.md', badge: 'feedback loop' },
+] as const
 
 const isMissingPath = (error: unknown) =>
   typeof error === 'object' && error !== null && 'code' in error && error.code === 'ENOENT'
@@ -29,9 +60,20 @@ const readPloonFile = async (path: string) => {
   return (await file.exists()) ? parsePloon(await file.text()) : null
 }
 
+function deterministicScore(personaId: string, followerId: string, dimension: string, contentName = ''): number {
+  const seed = `${personaId}-${followerId}-${dimension}-${contentName}`
+  let hash = 0
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i)
+    hash |= 0
+  }
+
+  return 40 + Math.abs(hash % 56)
+}
+
 const listContentFiles = async (path: string) =>
   (await readDir(path))
-    .filter((entry) => entry.isFile())
+    .filter((entry) => entry.isFile() && !entry.name.startsWith('.'))
     .map((entry) => entry.name)
     .sort((left, right) => left.localeCompare(right))
 
@@ -84,6 +126,71 @@ apiRoutes.get('/personas/:id/interview-log', async (c) => {
 apiRoutes.get('/content/drafts', async (c) => c.json(await listContentFiles(draftsDir)))
 
 apiRoutes.get('/content/published', async (c) => c.json(await listContentFiles(publishedDir)))
+
+apiRoutes.get('/personas/:id/qa-simulation', async (c) => {
+  const id = c.req.param('id')
+  const contentName = c.req.query('content') ?? ''
+  const [persona, nuance, accounts] = await Promise.all([
+    readPloonFile(`${personasDir}/${id}/persona.md`),
+    readPloonFile(`${personasDir}/${id}/nuance.md`),
+    readPloonFile(`${personasDir}/${id}/accounts.md`),
+  ])
+
+  if (!persona && !nuance && !accounts) {
+    return c.notFound()
+  }
+
+  const followers = FOLLOWER_ARCHETYPES.map((archetype) => {
+    const scores = {
+      hook: deterministicScore(id, archetype.id, 'hook', contentName),
+      empathy: deterministicScore(id, archetype.id, 'empathy', contentName),
+      share: deterministicScore(id, archetype.id, 'share', contentName),
+      cta: deterministicScore(id, archetype.id, 'cta', contentName),
+      platform_fit: deterministicScore(id, archetype.id, 'platform_fit', contentName),
+    }
+    const total = Object.values(scores).reduce((sum, score) => sum + score, 0)
+
+    return { ...archetype, scores, total }
+  }).sort((left, right) => right.total - left.total)
+
+  const top5Ids = new Set(followers.slice(0, 5).map((follower) => follower.id))
+  const rankedFollowers = followers.map((follower) => ({
+    ...follower,
+    isTop5: top5Ids.has(follower.id),
+  }))
+
+  return c.json({
+    personaId: id,
+    contentName,
+    followers: rankedFollowers,
+    top5: rankedFollowers.slice(0, 5),
+    generatedAt: new Date().toISOString(),
+  })
+})
+
+apiRoutes.get('/agents/status', async (c) => {
+  const skills = (await readDir('./skills')).filter((entry) => entry.isDirectory())
+  const skillNames = new Set(skills.map((entry) => entry.name))
+
+  const statuses = await Promise.all(
+    AGENT_DEFINITIONS.map(async (agent) => {
+      const skillDir = agent.skillFile.split('/')[1] ?? ''
+
+      return {
+        name: agent.name,
+        description: agent.description,
+        badge: agent.badge,
+        status: 'idle' as const,
+        agentFileExists: await Bun.file(`agents/${agent.name}.md`).exists(),
+        skillFileExists: skillNames.has(skillDir) && await Bun.file(agent.skillFile).exists(),
+        skillCount: skillNames.has(skillDir) ? 1 : 0,
+        lastActivity: null,
+      }
+    }),
+  )
+
+  return c.json(statuses)
+})
 
 apiRoutes.get('/status', async (c) => {
   const personas = (await readDir(personasDir)).filter((entry) => entry.isDirectory())

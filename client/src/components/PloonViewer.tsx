@@ -1,5 +1,19 @@
-export default function PloonViewer({ data, tableName }: { data: any, tableName: string }) {
-  if (!data || data.length === 0) {
+type TableWrapper = { table?: Record<string, unknown>[] }
+
+function normalizeRows(data: Record<string, unknown> | Record<string, unknown>[] | TableWrapper): Record<string, unknown>[] {
+  if (Array.isArray(data)) {
+    return data
+  }
+
+  if ('table' in data && Array.isArray(data.table)) {
+    return data.table
+  }
+
+  return [data]
+}
+
+export default function PloonViewer({ data, tableName }: { data: Record<string, unknown> | Record<string, unknown>[] | TableWrapper, tableName: string }) {
+  if (!data) {
     return (
       <div className="p-4 bg-gray-900 border border-gray-800 rounded-lg text-gray-500 text-sm">
         No data for {tableName}
@@ -7,8 +21,16 @@ export default function PloonViewer({ data, tableName }: { data: any, tableName:
     );
   }
 
-  const isArray = Array.isArray(data);
-  const rows = isArray ? data : [data];
+  const rows = normalizeRows(data)
+
+  if (rows.length === 0) {
+    return (
+      <div className="p-4 bg-gray-900 border border-gray-800 rounded-lg text-gray-500 text-sm">
+        No data for {tableName}
+      </div>
+    )
+  }
+
   const keys = Object.keys(rows[0] || {});
 
   return (
