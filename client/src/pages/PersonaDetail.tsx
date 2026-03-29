@@ -46,10 +46,10 @@ export default function PersonaDetail() {
           Persona <span className="text-gray-500 font-mono text-sm font-normal ml-2">persona.md</span>
         </h3>
         <div className="grid gap-6">
-          {persona.core && <PloonViewer data={persona.core} tableName="core" />}
-          {persona.decide && <PloonViewer data={persona.decide} tableName="decide" />}
-          {persona.energy && <PloonViewer data={persona.energy} tableName="energy" />}
-          {persona.blind && <PloonViewer data={persona.blind} tableName="blind" />}
+          {persona.core && <PloonViewer data={persona.core.table} tableName="core" />}
+          {persona.decide && <PloonViewer data={persona.decide.table} tableName="decide" />}
+          {persona.energy && <PloonViewer data={persona.energy.table} tableName="energy" />}
+          {persona.blind && <PloonViewer data={persona.blind.table} tableName="blind" />}
         </div>
       </div>
 
@@ -59,8 +59,8 @@ export default function PersonaDetail() {
           Nuance <span className="text-gray-500 font-mono text-sm font-normal ml-2">nuance.md</span>
         </h3>
         <div className="grid gap-6">
-          {nuance.voice && <PloonViewer data={nuance.voice} tableName="voice" />}
-          {nuance.platform && <PloonViewer data={nuance.platform} tableName="platform" />}
+          {nuance.voice && <PloonViewer data={nuance.voice.table} tableName="voice" />}
+          {nuance.platform && <PloonViewer data={nuance.platform.table} tableName="platform" />}
         </div>
       </div>
 
@@ -70,10 +70,10 @@ export default function PersonaDetail() {
           Accounts <span className="text-gray-500 font-mono text-sm font-normal ml-2">accounts.md</span>
         </h3>
         <div className="grid gap-6">
-          {accounts.accounts && <PloonViewer data={accounts.accounts} tableName="accounts" />}
-          {accounts.ideal && <PloonViewer data={accounts.ideal} tableName="ideal" />}
-          {accounts.rolemodel && <PloonViewer data={accounts.rolemodel} tableName="rolemodel" />}
-          {accounts.virtual && <PloonViewer data={accounts.virtual} tableName="virtual" />}
+          {accounts.accounts && <PloonViewer data={accounts.accounts.table} tableName="accounts" />}
+          {accounts.ideal && <PloonViewer data={accounts.ideal.table} tableName="ideal" />}
+          {accounts.rolemodel && <PloonViewer data={accounts.rolemodel.table} tableName="rolemodel" />}
+          {accounts.virtual && <PloonViewer data={accounts.virtual.table} tableName="virtual" />}
         </div>
       </div>
 

@@ -5,7 +5,7 @@
 <h3 align="center">Build and run multiple personas across any AI agent.</h3>
 
 <p align="center">
-  <img alt="version" src="https://img.shields.io/badge/version-0.3.0-blue">
+  <img alt="version" src="https://img.shields.io/badge/version-1.2.1-blue">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="stars" src="https://img.shields.io/github/stars/LilMGenius/polysona?style=social">
 </p>
@@ -75,7 +75,11 @@ gstack gives you Garry Tan's brain. **polysona gives you yours.**
 # Use $interview, $content, $qa in your Codex session
 
 # Claude Code
+# 1. Add local marketplace
+claude plugin marketplace add ./.claude-plugin/marketplace.json
+# 2. Install plugin
 claude plugin install polysona
+# 3. Start session (Hooks will auto-run)
 # Then: /interview → /content x → /qa → /publish
 ```
 

@@ -5,7 +5,7 @@
 <h3 align="center">모든 AI 에이전트 위에서 다중 페르소나를 구축하고 운영하세요.</h3>
 
 <p align="center">
-  <img alt="version" src="https://img.shields.io/badge/version-0.3.0-blue">
+  <img alt="version" src="https://img.shields.io/badge/version-1.2.1-blue">
   <img alt="license" src="https://img.shields.io/badge/license-MIT-green">
   <img alt="stars" src="https://img.shields.io/github/stars/LilMGenius/polysona?style=social">
 </p>
@@ -75,7 +75,11 @@ gstack은 개리 탄(Garry Tan)의 뇌를 줍니다. **polysona는 당신의 뇌
 # Use $interview, $content, $qa in your Codex session
 
 # Claude Code
+# 1. 로컬 마켓플레이스 추가
+claude plugin marketplace add ./.claude-plugin/marketplace.json
+# 2. 플러그인 설치
 claude plugin install polysona
+# 3. 세션 시작 (Hooks 자동 실행)
 # Then: /interview → /content x → /qa → /publish
 ```
 

@@ -5,7 +5,7 @@ import { Hono } from 'hono'
 import { parsePloon } from '../lib/ploon'
 
 const apiRoutes = new Hono()
-const version = '1.2.0'
+const version = '1.2.1'
 const personasDir = './personas'
 const draftsDir = './content/drafts'
 const publishedDir = './content/published'
