@@ -7,6 +7,8 @@ export interface AgentStatusCardProps {
   lastActivity: string | null;
   skillCount: number;
   badge?: string;
+  agentFileExists?: boolean;
+  skillFileExists?: boolean;
 }
 
 export default function AgentStatusCard({
@@ -16,6 +18,8 @@ export default function AgentStatusCard({
   lastActivity,
   skillCount,
   badge,
+  agentFileExists = true,
+  skillFileExists = true,
 }: AgentStatusCardProps) {
   
   const statusStyles = {
@@ -24,14 +28,15 @@ export default function AgentStatusCard({
     error: { dot: 'bg-red-500', text: 'text-red-400', border: 'border-red-500/30' }
   };
 
-  const style = statusStyles[status];
+  const effectiveStatus = !agentFileExists || !skillFileExists ? 'error' : status;
+  const style = statusStyles[effectiveStatus];
 
   return (
     <div className={`flex flex-col p-4 rounded-xl bg-gray-900 border ${style.border} transition-colors`}>
       <div className="flex items-center justify-between mb-3">
         <h3 className="text-base font-bold text-gray-100 font-mono">{name}</h3>
         <div className="flex items-center gap-2">
-          <span className={`text-xs font-mono uppercase ${style.text}`}>{status}</span>
+          <span className={`text-xs font-mono uppercase ${style.text}`}>{effectiveStatus}</span>
           <div className={`w-2.5 h-2.5 rounded-full ${style.dot}`} />
         </div>
       </div>
