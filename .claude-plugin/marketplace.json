@@ -1,1 +1,14 @@
-{"plugins":[{"name":"polysona","description":"Build and run multiple personas across any AI agent.","homepage":"https://github.com/LilMGenius/polysona"}]}
+{
+  "plugins": [
+    {
+      "name": "polysona",
+      "version": "1.1.0",
+      "description": "Build and run multiple personas across any AI agent.",
+      "homepage": "https://github.com/LilMGenius/polysona",
+      "author": "LilMGenius",
+      "license": "MIT",
+      "keywords": ["persona", "psychology", "content", "ai-agent", "codex", "claude"],
+      "skills": ["interview", "introduce", "trend", "content", "qa", "publish", "status", "export"]
+    }
+  ]
+}

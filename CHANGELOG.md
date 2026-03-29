@@ -2,6 +2,13 @@
 
 All notable changes to Polysona are documented here.
 
+## [1.1.0] — 2026-03-29
+
+### Added
+- Export skill: persona → CLAUDE.md/AGENTS.md extraction for any AI agent
+- Marketplace registration with full metadata
+- Codex compatibility verified (AGENTS.md auto-recognition)
+
 ## [1.0.0] — 2026-03-29
 
 ### Added
