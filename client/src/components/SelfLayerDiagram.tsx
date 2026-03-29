@@ -19,6 +19,7 @@ export interface SelfLayerDiagramProps {
   persona?: PersonaData;
   nuance?: NuanceData;
   accounts?: AccountsData;
+  gap?: string;
 }
 
 type TableRow = Record<string, unknown>
@@ -51,7 +52,7 @@ function firstNonEmptyString(row: TableRow | undefined, keys: string[]): string 
   return undefined
 }
 
-export default function SelfLayerDiagram({ persona, nuance, accounts }: SelfLayerDiagramProps) {
+export default function SelfLayerDiagram({ persona, nuance, accounts, gap }: SelfLayerDiagramProps) {
   const getSafeStr = (val: string | undefined, fallback = 'Unknown') => val || fallback;
   const blindRows = extractRows(persona?.blind as TableValue)
   const voiceRows = extractRows(nuance?.voice as TableValue)
@@ -62,14 +63,14 @@ export default function SelfLayerDiagram({ persona, nuance, accounts }: SelfLaye
 
   const layer1 = getSafeStr(firstNonEmptyString(blindRows[0], ['johari', 'description', 'type']));
   const layer2 = getSafeStr(firstNonEmptyString(voiceRows[0], ['register', 'style', 'tone']));
-  const layer3 = idealRows.map((row) => firstNonEmptyString(row, ['name', 'why', 'id'])).filter(Boolean).join(', ') || decideRows.map((row) => firstNonEmptyString(row, ['priority', 'approach'])).filter(Boolean).join(', ') || 'No ideal signal captured yet';
-  const layer4 = rolemodelRows.map((row) => firstNonEmptyString(row, ['handle', 'domain', 'platform', 'name', 'id'])).filter(Boolean).join(', ') || 'No rolemodels set';
+  const layer3 = idealRows.map((row) => firstNonEmptyString(row, ['name', 'why', 'id'])).filter(Boolean).join(', ') || decideRows.map((row) => firstNonEmptyString(row, ['approach', 'priority'])).filter(Boolean).join(', ') || 'No ideal signal captured yet';
+  const layer4 = rolemodelRows.map((row) => firstNonEmptyString(row, ['name', 'handle', 'domain', 'platform', 'id'])).filter(Boolean).join(', ') || 'No rolemodels set';
 
   const tags = coreRows.map((row) => firstNonEmptyString(row, ['tags', 'value', 'layer'])).filter(Boolean).join(' · ');
   const anti = coreRows.map((row) => firstNonEmptyString(row, ['anti', 'source'])).filter(Boolean).join(' · ');
   const layer5 = [tags, anti].filter(Boolean).join(' | ') || 'Unknown core';
 
-  const gap = firstNonEmptyString(blindRows[0], ['gap']);
+  const detectedGap = gap || firstNonEmptyString(blindRows[0], ['gap']);
 
   const LayerCard = ({ num, title, content, badge, colorClass }: { num: number, title: string, content: string, badge: string, colorClass: string }) => (
     <div className={`relative flex flex-col p-4 rounded-xl border ${colorClass} transition-all hover:scale-[1.01]`}>
@@ -109,11 +110,11 @@ export default function SelfLayerDiagram({ persona, nuance, accounts }: SelfLaye
         <svg className="w-5 h-5 text-indigo-400/50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
       </div>
       
-      {gap && (
+      {detectedGap && (
         <div className="flex justify-center z-20 my-1">
           <div className="bg-red-950/80 border border-red-500/50 text-red-200 text-xs px-3 py-1.5 rounded-full flex items-center gap-2 shadow-lg max-w-sm text-center">
             <svg className="w-4 h-4 text-red-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
-            <span className="font-mono truncate">GAP: {gap}</span>
+            <span className="font-mono truncate">GAP: {detectedGap}</span>
           </div>
         </div>
       )}

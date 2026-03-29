@@ -66,7 +66,7 @@ export default function PersonaDetail() {
             Self Layer Model
           </h3>
           <div className="bg-gray-900/30 border border-gray-800 p-6 rounded-xl">
-            <SelfLayerDiagram persona={persona} nuance={nuance} accounts={accounts} />
+            <SelfLayerDiagram persona={persona} nuance={nuance} accounts={accounts} gap={blindGaps[0]} />
           </div>
         </div>
 
