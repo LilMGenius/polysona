@@ -6,6 +6,7 @@ import apiRoutes from './routes/api'
 
 const app = new Hono()
 const port = Number(process.env.PORT ?? 3000)
+const hostname = process.env.HOST ?? '127.0.0.1'
 const isProduction = process.env.NODE_ENV === 'production'
 const serveBuiltClient = isProduction || existsSync('./dist/index.html')
 
@@ -49,9 +50,17 @@ app.get('*', (c) => {
   return c.notFound()
 })
 
-console.log(`Polysona dashboard server listening on http://localhost:${port}`)
+console.log(`Polysona dashboard server listening on http://${hostname}:${port}`)
+
+if (hostname !== '127.0.0.1' && hostname !== 'localhost') {
+  console.warn(
+    `WARNING: bound to ${hostname}, so persona files are reachable from the network. ` +
+      'This server has no authentication.',
+  )
+}
 
 export default {
   port,
+  hostname,
   fetch: app.fetch,
 }
