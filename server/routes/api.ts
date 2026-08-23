@@ -5,6 +5,12 @@ import { Hono } from 'hono'
 import { parsePloon } from '../lib/ploon'
 
 const apiRoutes = new Hono()
+
+// A persona id names one directory under personas/. Anything else — a separator,
+// a dot segment, an encoded traversal — is not an id and must not reach the filesystem.
+const SAFE_PERSONA_ID = /^[A-Za-z0-9._-]+$/
+const isSafePersonaId = (id: string) => SAFE_PERSONA_ID.test(id) && id !== '.' && id !== '..'
+
 const version = '1.3.0'
 const personasDir = './personas'
 const draftsDir = './content/drafts'
@@ -93,6 +99,11 @@ apiRoutes.get('/personas', async (c) => {
 
 apiRoutes.get('/personas/:id', async (c) => {
   const id = c.req.param('id')
+
+  if (!isSafePersonaId(id)) {
+    return c.notFound()
+  }
+
   const files = await readDir(`${personasDir}/${id}`)
   if (!files.length) {
     return c.notFound()
@@ -110,6 +121,11 @@ apiRoutes.get('/personas/:id', async (c) => {
 
 apiRoutes.get('/personas/:id/interview-log', async (c) => {
   const id = c.req.param('id')
+
+  if (!isSafePersonaId(id)) {
+    return c.notFound()
+  }
+
   const persona = await readPloonFile(`${personasDir}/${id}/persona.md`)
   if (!persona) {
     return c.notFound()
@@ -129,6 +145,11 @@ apiRoutes.get('/content/published', async (c) => c.json(await listContentFiles(p
 
 apiRoutes.get('/personas/:id/qa-simulation', async (c) => {
   const id = c.req.param('id')
+
+  if (!isSafePersonaId(id)) {
+    return c.notFound()
+  }
+
   const contentName = c.req.query('content') ?? ''
   const [persona, nuance, accounts] = await Promise.all([
     readPloonFile(`${personasDir}/${id}/persona.md`),
