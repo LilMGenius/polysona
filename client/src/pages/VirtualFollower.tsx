@@ -7,6 +7,8 @@ export default function VirtualFollower() {
   const [personas, setPersonas] = useState<{ id: string; name?: string }[]>([]);
   const [selectedPersona, setSelectedPersona] = useState<string | null>(null);
   const [followers, setFollowers] = useState<Follower[]>([]);
+  const [simulated, setSimulated] = useState(false);
+  const [scoringNote, setScoringNote] = useState('');
   const [loading, setLoading] = useState(true);
   const selectedContent = searchParams.get('content') || '';
 
@@ -34,6 +36,8 @@ export default function VirtualFollower() {
       .then(r => r.json())
       .then(data => {
         setFollowers(data?.followers || []);
+        setSimulated(Boolean(data?.simulated));
+        setScoringNote(data?.scoringNote || '');
         setLoading(false);
       })
       .catch(() => setLoading(false));
@@ -94,6 +98,14 @@ export default function VirtualFollower() {
           {selectedContent ? (
             <div className="mt-3 inline-flex rounded-md border border-indigo-500/20 bg-indigo-500/10 px-3 py-1 text-xs font-mono text-indigo-300">
               Content: {selectedContent}
+            </div>
+          ) : null}
+          {simulated ? (
+            <div className="mt-3 rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs text-amber-300">
+              <span className="font-mono uppercase tracking-wider">Simulated scores</span>
+              <p className="mt-1 text-amber-200/80">
+                {scoringNote || 'Placeholder scores. The draft is never read. Run /qa for a real evaluation.'}
+              </p>
             </div>
           ) : null}
         </div>

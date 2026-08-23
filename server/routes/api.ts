@@ -60,6 +60,10 @@ const readPloonFile = async (path: string) => {
   return (await file.exists()) ? parsePloon(await file.text()) : null
 }
 
+// A placeholder that stands in for the virtual-follower agent so the dashboard has
+// something to lay out. It hashes the identifiers it is given and never opens the
+// draft, so the number moves with the filename and not with a single word of the
+// content. Responses that carry it are flagged `simulated`.
 function deterministicScore(personaId: string, followerId: string, dimension: string, contentName = ''): number {
   const seed = `${personaId}-${followerId}-${dimension}-${contentName}`
   let hash = 0
@@ -165,6 +169,10 @@ apiRoutes.get('/personas/:id/qa-simulation', async (c) => {
     followers: rankedFollowers,
     top5: rankedFollowers.slice(0, 5),
     generatedAt: new Date().toISOString(),
+    simulated: true,
+    scoring: 'deterministic-hash',
+    scoringNote:
+      'Placeholder scores hashed from persona, follower, and content name. The draft is never read. Run /qa for a real virtual-follower evaluation.',
   })
 })
 
